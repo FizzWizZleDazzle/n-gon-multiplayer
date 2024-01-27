@@ -1,12 +1,6 @@
 //global player variables for use in matter.js physics
 let player, jumpSensor, playerBody, playerHead, headSensor;
 
-let playerLocal = new m
-let player1 = new m();
-let player2 = new m();
-let player3 = new m();
-let player4 = new m();
-
 // player Object Prototype *********************************************
 const m = {
     spawn() {
