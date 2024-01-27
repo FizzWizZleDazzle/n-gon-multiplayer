@@ -479,7 +479,7 @@ const mobs = {
                     // ctx.lineDashOffset = 6*(simulation.cycle % 215);
                     if (this.distanceToPlayer() < this.laserRange) {
                         if (m.immuneCycle < m.cycle) {
-                            m.damage(0.0003 * simulation.dmgScale);
+                          playerLocal.damage(0.0003 * simulation.dmgScale);
                             if (m.energy > 0.1) m.energy -= 0.003
                         }
                         ctx.beginPath();
@@ -567,7 +567,7 @@ const mobs = {
                     if (best.who === player) {
                         if (m.immuneCycle < m.cycle) {
                             const dmg = 0.0014 * simulation.dmgScale;
-                            m.damage(dmg);
+                          playerLocal.damage(dmg);
                             ctx.fillStyle = "#f00"; //draw damage
                             ctx.beginPath();
                             ctx.arc(best.x, best.y, dmg * 10000, 0, 2 * Math.PI);
@@ -600,7 +600,7 @@ const mobs = {
                 //check for wing -> player damage
                 const hitPlayer = Matter.Query.ray([player], this.position, Vector.add(this.position, Vector.mult(perp, radius * 2.05)), minorRadius)
                 if (hitPlayer.length && m.immuneCycle < m.cycle) {
-                    m.damage(dmg * simulation.dmgScale);
+                  playerLocal.damage(dmg * simulation.dmgScale);
                 }
             },
             searchSpring() {
@@ -1105,7 +1105,7 @@ const mobs = {
             },
             explode(mass = this.mass) {
                 if (m.immuneCycle < m.cycle) {
-                    m.damage(Math.min(Math.max(0.02 * Math.sqrt(mass), 0.01), 0.35) * simulation.dmgScale);
+                  playerLocal.damage(Math.min(Math.max(0.02 * Math.sqrt(mass), 0.01), 0.35) * simulation.dmgScale);
                     this.isDropPowerUp = false;
                     this.death(); //death with no power up or body
                 }
@@ -1316,7 +1316,7 @@ const mobs = {
                     }
                     if (tech.isEnergyLoss) m.energy *= 0.8;
                     powerUps.spawnRandomPowerUp(this.position.x, this.position.y);
-                    m.lastKillCycle = m.cycle; //tracks the last time a kill was made, mostly used in simulation.checks()
+                  playerLocal.lastKillCycle = m.cycle; //tracks the last time a kill was made, mostly used in simulation.checks()
                     mobs.mobDeaths++
 
                     if (Math.random() < tech.sporesOnDeath) {
@@ -1355,11 +1355,11 @@ const mobs = {
                             if (tech.isEnergyHealth) {
                                 if (m.maxEnergy > amount) {
                                     tech.healMaxEnergyBonus -= amount
-                                    m.setMaxEnergy();
+                                  playerLocal.setMaxEnergy();
                                 }
                             } else if (m.maxHealth > amount) {
                                 tech.extraMaxHealth -= amount //decrease max health
-                                m.setMaxHealth();
+                              playerLocal.setMaxHealth();
                             }
                         }
 
@@ -1377,11 +1377,11 @@ const mobs = {
                         //     if (tech.isEnergyHealth) {
                         //         if (m.maxEnergy > amount) {
                         //             tech.healMaxEnergyBonus -= amount
-                        //             m.setMaxEnergy();
+                        //           playerLocal.setMaxEnergy();
                         //         }
                         //     } else if (m.maxHealth > amount) {
                         //         tech.extraMaxHealth -= amount //decrease max health
-                        //         m.setMaxHealth();
+                        //       playerLocal.setMaxHealth();
                         //     }
                         // }
                     }

@@ -256,8 +256,8 @@ const spawn = {
                 if (m.energy > DRAIN) {
                     if (m.immuneCycle < m.cycle) m.energy -= DRAIN
                 } else {
-                    m.energy = 0;
-                    m.damage((tech.isRadioactiveResistance ? 0.005 * 0.25 : 0.005) * simulation.dmgScale)
+                  playerLocal.energy = 0;
+                  playerLocal.damage((tech.isRadioactiveResistance ? 0.005 * 0.25 : 0.005) * simulation.dmgScale)
                     simulation.drawList.push({ //add dmg to draw queue
                         x: this.position.x,
                         y: this.position.y,
@@ -661,7 +661,7 @@ const spawn = {
                         this.playerSlowTime = 180
                         //damage player
                         const dmg = 0.0001 * simulation.dmgScale
-                        m.damage(dmg);
+                      playerLocal.damage(dmg);
                     }
                 } else { //show where slow zone is about to show up
                     ctx.fillStyle = `rgba(0, 100, 255, ${0.2 + 0.25 * Math.random()})`;
@@ -805,7 +805,7 @@ const spawn = {
                 let sub, knock
                 sub = Vector.sub(player.position, this.position);
                 if (Vector.magnitude(sub) < this.explodeRange) { //player knock back
-                    m.damage(0.05);
+                  playerLocal.damage(0.05);
                     knock = Vector.mult(Vector.normalise(sub), player.mass * 0.1);
                     player.force.x += knock.x;
                     player.force.y += knock.y;
@@ -877,9 +877,9 @@ const spawn = {
                 const orbit = { x: Math.cos(time), y: Math.sin(time) }
                 Matter.Body.setPosition(this, Vector.add(who.position, Vector.mult(orbit, radius)))
                 if (Matter.Query.collides(this, [player]).length > 0 && !(m.isCloak && tech.isIntangible) && m.immuneCycle < m.cycle) {
-                    m.immuneCycle = m.cycle + m.collisionImmuneCycles; //player is immune to damage for 30 cycles
+                  playerLocal.immuneCycle = m.cycle + m.collisionImmuneCycles; //player is immune to damage for 30 cycles
                     const dmg = 0.13 * simulation.dmgScale
-                    m.damage(dmg);
+                  playerLocal.damage(dmg);
                     simulation.drawList.push({ //add dmg to draw queue
                         x: this.position.x,
                         y: this.position.y,
@@ -948,7 +948,7 @@ const spawn = {
             if (!m.isCloak) vertexCollision(where, look, [playerBody, playerHead]);
             if (best.who && (best.who === playerBody || best.who === playerHead) && m.immuneCycle < m.cycle) {
                 if (m.immuneCycle < m.cycle + 60 + m.collisionImmuneCycles) m.immuneCycle = m.cycle + 60 + m.collisionImmuneCycles; //player is immune to damage extra time
-                m.damage(dmg);
+              playerLocal.damage(dmg);
                 simulation.drawList.push({ //add dmg to draw queue
                     x: best.x,
                     y: best.y,
@@ -1036,7 +1036,7 @@ const spawn = {
                                 // build.shareURL(false)
                                 setTimeout(function () {
                                     if (!simulation.onTitlePage) {
-                                        m.alive = false
+                                      playerLocal.alive = false
                                         simulation.paused = true;
                                         // simulation.clearMap();
                                         // Matter.Composite.clear(composite, keepStatic, [deep = false])
@@ -1392,7 +1392,7 @@ const spawn = {
     //         if (!m.isCloak) vertexCollision(where, look, [playerBody, playerHead]);
     //         if (best.who && (best.who === playerBody || best.who === playerHead) && m.immuneCycle < m.cycle) {
     //             if (m.immuneCycle < m.cycle + 60 + m.collisionImmuneCycles) m.immuneCycle = m.cycle + 60 + m.collisionImmuneCycles; //player is immune to damage extra time
-    //             m.damage(dmg);
+    //           playerLocal.damage(dmg);
     //             simulation.drawList.push({ //add dmg to draw queue
     //                 x: best.x,
     //                 y: best.y,
@@ -2623,8 +2623,8 @@ const spawn = {
                     this.death();
                     //hit player
                     if (Vector.magnitude(Vector.sub(this.position, player.position)) < this.explodeRange && m.immuneCycle < m.cycle) {
-                        m.damage(0.01 * simulation.dmgScale * (tech.isRadioactiveResistance ? 0.25 : 1));
-                        m.energy -= 0.1 * (tech.isRadioactiveResistance ? 0.25 : 1)
+                      playerLocal.damage(0.01 * simulation.dmgScale * (tech.isRadioactiveResistance ? 0.25 : 1));
+                      playerLocal.energy -= 0.1 * (tech.isRadioactiveResistance ? 0.25 : 1)
                         if (m.energy < 0) m.energy = 0
                     }
                     const range = this.explodeRange + 50 //mines get a slightly larger range to explode
@@ -3615,9 +3615,9 @@ const spawn = {
             if (this.distanceToPlayer() < this.laserRange) {
                 if (m.immuneCycle < m.cycle) {
                     if (m.energy > 0.002) {
-                        m.energy -= 0.004
+                      playerLocal.energy -= 0.004
                     } else {
-                        m.damage(0.0004 * simulation.dmgScale)
+                      playerLocal.damage(0.0004 * simulation.dmgScale)
                     }
                 }
                 this.warpIntensity += 0.0004
@@ -3959,7 +3959,7 @@ const spawn = {
                     // hitting player
                     if ((best.who === playerBody || best.who === playerHead) && m.immuneCycle < m.cycle) {
                         const dmg = 0.002 * simulation.dmgScale;
-                        m.damage(dmg);
+                      playerLocal.damage(dmg);
                         //draw damage
                         ctx.fillStyle = color;
                         ctx.beginPath();
@@ -4332,7 +4332,7 @@ const spawn = {
                     // hitting player
                     if ((best.who === playerBody || best.who === playerHead) && m.immuneCycle < m.cycle) {
                         const dmg = 0.006 * simulation.dmgScale;
-                        m.damage(dmg);
+                      playerLocal.damage(dmg);
                         //draw damage
                         ctx.fillStyle = color;
                         ctx.beginPath();
@@ -4402,8 +4402,8 @@ const spawn = {
             // //check damage
             // const hitPlayer = Matter.Query.ray([player], this.position, wing, radius)
             // if (hitPlayer.length && m.immuneCycle < m.cycle) {
-            //     m.immuneCycle = m.cycle + m.collisionImmuneCycles; //player is immune to damage
-            //     m.damage(0.02 * simulation.dmgScale);
+            //   playerLocal.immuneCycle = m.cycle + m.collisionImmuneCycles; //player is immune to damage
+            //   playerLocal.damage(0.02 * simulation.dmgScale);
             // }
 
 
@@ -4652,8 +4652,8 @@ const spawn = {
                         }
                         //damage player if in range
                         if (Vector.magnitude(Vector.sub(player.position, this.fireTarget)) < this.pulseRadius && m.immuneCycle < m.cycle) {
-                            m.immuneCycle = m.cycle + m.collisionImmuneCycles; //player is immune to damage
-                            m.damage(0.045 * simulation.dmgScale);
+                          playerLocal.immuneCycle = m.cycle + m.collisionImmuneCycles; //player is immune to damage
+                          playerLocal.damage(0.045 * simulation.dmgScale);
                         }
                         simulation.drawList.push({ //add dmg to draw queue
                             x: this.fireTarget.x,
@@ -4745,7 +4745,7 @@ const spawn = {
             }, Vector.normalise(Vector.sub(this.fireTarget, this.position)));
             //distance between the target and the player's location
             if (
-                m.isCloak ||
+              playerLocal.isCloak ||
                 dot > 0.03 || // not looking at target
                 Matter.Query.ray(map, this.fireTarget, this.position).length || Matter.Query.ray(body, this.fireTarget, this.position).length || //something blocking line of sight
                 Vector.magnitude(Vector.sub(m.pos, this.fireTarget)) > 1000 // distance from player to target is very far,  (this is because dot product can't tell if facing 180 degrees away)
@@ -4773,8 +4773,8 @@ const spawn = {
                         }
                         //damage player if in range
                         if (Vector.magnitude(Vector.sub(player.position, this.fireTarget)) < this.pulseRadius && m.immuneCycle < m.cycle) {
-                            m.immuneCycle = m.cycle + m.collisionImmuneCycles; //player is immune to damage
-                            m.damage(0.03 * simulation.dmgScale);
+                          playerLocal.immuneCycle = m.cycle + m.collisionImmuneCycles; //player is immune to damage
+                          playerLocal.damage(0.03 * simulation.dmgScale);
                         }
                         simulation.drawList.push({ //add dmg to draw queue
                             x: this.fireTarget.x,
@@ -4926,7 +4926,7 @@ const spawn = {
                     // hitting player
                     if ((best.who === playerBody || best.who === playerHead) && m.immuneCycle < m.cycle) {
                         const dmg = 0.003 * simulation.dmgScale;
-                        m.damage(dmg);
+                      playerLocal.damage(dmg);
                         //draw damage
                         ctx.fillStyle = color;
                         ctx.beginPath();
@@ -5082,9 +5082,9 @@ const spawn = {
             vertexCollision(where, look, body);
             if (!m.isCloak) vertexCollision(where, look, [playerBody, playerHead]);
             if (best.who && (best.who === playerBody || best.who === playerHead) && m.immuneCycle < m.cycle) {
-                m.immuneCycle = m.cycle + m.collisionImmuneCycles + 60; //player is immune to damage for an extra second
+              playerLocal.immuneCycle = m.cycle + m.collisionImmuneCycles + 60; //player is immune to damage for an extra second
                 const dmg = 0.14 * simulation.dmgScale;
-                m.damage(dmg);
+              playerLocal.damage(dmg);
                 simulation.drawList.push({ //add dmg to draw queue
                     x: best.x,
                     y: best.y,
@@ -5334,8 +5334,8 @@ const spawn = {
             vertexCollision(where, look, map);
             if (!m.isCloak) vertexCollision(where, look, [playerBody, playerHead]);
             if (best.who && (best.who === playerBody || best.who === playerHead) && m.immuneCycle < m.cycle) {
-                m.immuneCycle = m.cycle + m.collisionImmuneCycles; //player is immune to damage for an extra second
-                m.damage(this.swordDamage);
+              playerLocal.immuneCycle = m.cycle + m.collisionImmuneCycles; //player is immune to damage for an extra second
+              playerLocal.damage(this.swordDamage);
                 simulation.drawList.push({ //add dmg to draw queue
                     x: best.x,
                     y: best.y,
@@ -5597,8 +5597,8 @@ const spawn = {
                     this.death();
                     //hit player
                     if (Vector.magnitude(Vector.sub(this.position, player.position)) < this.explodeRange && m.immuneCycle < m.cycle) {
-                        m.damage(0.02 * simulation.dmgScale * (tech.isRadioactiveResistance ? 0.25 : 1));
-                        m.energy -= 0.2 * (tech.isRadioactiveResistance ? 0.25 : 1)
+                      playerLocal.damage(0.02 * simulation.dmgScale * (tech.isRadioactiveResistance ? 0.25 : 1));
+                      playerLocal.energy -= 0.2 * (tech.isRadioactiveResistance ? 0.25 : 1)
                         if (m.energy < 0) m.energy = 0
                     }
                     // mob[i].isInvulnerable = false //make mineBoss not invulnerable ?
@@ -5765,7 +5765,7 @@ const spawn = {
                 if (!simulation.isTimeSkipping) {
                     requestAnimationFrame(() => {
                         simulation.timePlayerSkip(2)
-                        m.walk_cycle += m.flipLegs * m.Vx //makes the legs look like they are moving fast
+                      playerLocal.walk_cycle += m.flipLegs * m.Vx //makes the legs look like they are moving fast
                     }); //wrapping in animation frame prevents errors, probably            
 
                     // simulation.timePlayerSkip(2)
@@ -5962,8 +5962,8 @@ const spawn = {
             vertexCollision(where, look, map);
             if (!m.isCloak) vertexCollision(where, look, [playerBody, playerHead]);
             if (best.who && (best.who === playerBody || best.who === playerHead) && m.immuneCycle < m.cycle) {
-                m.immuneCycle = m.cycle + m.collisionImmuneCycles + 60; //player is immune to damage for an extra second
-                m.damage(this.swordDamage);
+              playerLocal.immuneCycle = m.cycle + m.collisionImmuneCycles + 60; //player is immune to damage for an extra second
+              playerLocal.damage(this.swordDamage);
                 simulation.drawList.push({ //add dmg to draw queue
                     x: best.x,
                     y: best.y,
@@ -6084,8 +6084,8 @@ const spawn = {
             vertexCollision(where, look, map);
             if (!m.isCloak) vertexCollision(where, look, [playerBody, playerHead]);
             if (best.who && (best.who === playerBody || best.who === playerHead) && m.immuneCycle < m.cycle) {
-                m.immuneCycle = m.cycle + m.collisionImmuneCycles + 60; //player is immune to damage for an extra second
-                m.damage(this.swordDamage);
+              playerLocal.immuneCycle = m.cycle + m.collisionImmuneCycles + 60; //player is immune to damage for an extra second
+              playerLocal.damage(this.swordDamage);
                 simulation.drawList.push({ //add dmg to draw queue
                     x: best.x,
                     y: best.y,
@@ -6200,8 +6200,8 @@ const spawn = {
             vertexCollision(where, look, map);
             if (!m.isCloak) vertexCollision(where, look, [playerBody, playerHead]);
             if (best.who && (best.who === playerBody || best.who === playerHead) && m.immuneCycle < m.cycle) {
-                m.immuneCycle = m.cycle + m.collisionImmuneCycles + 60; //player is immune to damage for an extra second
-                m.damage(this.swordDamage);
+              playerLocal.immuneCycle = m.cycle + m.collisionImmuneCycles + 60; //player is immune to damage for an extra second
+              playerLocal.damage(this.swordDamage);
                 simulation.drawList.push({ //add dmg to draw queue
                     x: best.x,
                     y: best.y,
@@ -6337,8 +6337,8 @@ const spawn = {
                 this.swordRadiusGrowRate = 1 / this.swordRadiusGrowRateInitial //!!!! this retracts the sword if it hits the player
 
                 if (m.immuneCycle < m.cycle) {
-                    m.immuneCycle = m.cycle + m.collisionImmuneCycles + 60; //player is immune to damage for an extra second
-                    m.damage(this.swordDamage);
+                  playerLocal.immuneCycle = m.cycle + m.collisionImmuneCycles + 60; //player is immune to damage for an extra second
+                  playerLocal.damage(this.swordDamage);
                     simulation.drawList.push({ //add dmg to draw queue
                         x: best.x,
                         y: best.y,
@@ -7442,8 +7442,8 @@ const spawn = {
         me.onDeath = function () {
             //damage player if in range
             if (Vector.magnitude(Vector.sub(player.position, this.position)) < pulseRadius && m.immuneCycle < m.cycle) {
-                m.immuneCycle = m.cycle + m.collisionImmuneCycles; //player is immune to damage
-                m.damage(0.015 * simulation.dmgScale);
+              playerLocal.immuneCycle = m.cycle + m.collisionImmuneCycles; //player is immune to damage
+              playerLocal.damage(0.015 * simulation.dmgScale);
             }
             simulation.drawList.push({ //add dmg to draw queue
                 x: this.position.x,
@@ -7579,13 +7579,13 @@ const spawn = {
 
                     // 
                     //     simulation.timePlayerSkip(1)
-                    //     m.walk_cycle += m.flipLegs * m.Vx //makes the legs look like they are moving fast
+                    //   playerLocal.walk_cycle += m.flipLegs * m.Vx //makes the legs look like they are moving fast
                     // }); //wrapping in animation frame prevents errors, probably            
                     requestAnimationFrame(() => {
                         simulation.timePlayerSkip(1)
                     }); //wrapping in animation frame prevents errors, probably            
 
-                    m.walk_cycle += m.flipLegs * m.Vx //makes the legs look like they are moving fast
+                  playerLocal.walk_cycle += m.flipLegs * m.Vx //makes the legs look like they are moving fast
 
                     // if (simulation.fpsCap > 999){}
                     ctx.beginPath();
@@ -8323,9 +8323,9 @@ const spawn = {
             Matter.Body.setPosition(this, Vector.add(Vector.add(who.position, who.velocity), Vector.mult(orbit, radius)))
             //damage player
             if (Matter.Query.collides(this, [player]).length > 0 && !(m.isCloak && tech.isIntangible) && m.immuneCycle < m.cycle) {
-                m.immuneCycle = m.cycle + m.collisionImmuneCycles; //player is immune to damage for 30 cycles
+              playerLocal.immuneCycle = m.cycle + m.collisionImmuneCycles; //player is immune to damage for 30 cycles
                 const dmg = 0.03 * simulation.dmgScale
-                m.damage(dmg);
+              playerLocal.damage(dmg);
                 simulation.drawList.push({ //add dmg to draw queue
                     x: this.position.x,
                     y: this.position.y,
@@ -8623,7 +8623,7 @@ const spawn = {
                     this.fill = "#222";
                 }
                 //move mob to player
-                m.calcLeg(0, 0);
+              playerLocal.calcLeg(0, 0);
                 Matter.Body.setPosition(this, {
                     x: m.pos.x + m.flipLegs * m.knee.x - 5,
                     y: m.pos.y + m.knee.y
@@ -8675,7 +8675,7 @@ const spawn = {
                     this.fill = "#333";
                 }
                 //move mob to player
-                m.calcLeg(Math.PI, -3);
+              playerLocal.calcLeg(Math.PI, -3);
                 Matter.Body.setPosition(this, {
                     x: m.pos.x + m.flipLegs * m.knee.x - 5,
                     y: m.pos.y + m.knee.y
@@ -8726,7 +8726,7 @@ const spawn = {
                     this.fill = "#111";
                 }
                 //move mob to player
-                m.calcLeg(0, 0);
+              playerLocal.calcLeg(0, 0);
                 Matter.Body.setPosition(this, {
                     x: m.pos.x + m.flipLegs * m.foot.x - 5,
                     y: m.pos.y + m.foot.y - 1
@@ -8777,7 +8777,7 @@ const spawn = {
                     this.fill = "#222";
                 }
                 //move mob to player
-                m.calcLeg(Math.PI, -3);
+              playerLocal.calcLeg(Math.PI, -3);
                 Matter.Body.setPosition(this, {
                     x: m.pos.x + m.flipLegs * m.foot.x - 5,
                     y: m.pos.y + m.foot.y - 1

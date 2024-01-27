@@ -327,14 +327,14 @@ const tech = {
         effect() {
             tech.hardLanding = 70
             tech.isFallingDamage = true;
-            m.setMaxHealth();
-            m.addHealth(3 / simulation.healScale)
-            m.skin.tungsten()
+          playerLocal.setMaxHealth();
+          playerLocal.addHealth(3 / simulation.healScale)
+          playerLocal.skin.tungsten()
         },
         remove() {
             tech.hardLanding = 130
             tech.isFallingDamage = false;
-            m.setMaxHealth();
+          playerLocal.setMaxHealth();
             if (this.count) m.resetSkin();
         }
     },
@@ -351,17 +351,17 @@ const tech = {
         },
         requires: "not skinned",
         effect() {
-            m.skin.mech();
+          playerLocal.skin.mech();
             tech.hardLanding = 110
             tech.squirrelFx += 0.4;
             tech.squirrelJump += 0.16;
-            m.setMovement()
+          playerLocal.setMovement()
         },
         remove() {
             tech.hardLanding = 130
             tech.squirrelFx = 1;
             tech.squirrelJump = 1;
-            m.setMovement()
+          playerLocal.setMovement()
             if (this.count) m.resetSkin();
         }
     },
@@ -381,7 +381,7 @@ const tech = {
             tech.isFireMoveLock = true;
             b.setFireCD();
             b.setFireMethod();
-            m.skin.strokeGap();
+          playerLocal.skin.strokeGap();
         },
         remove() {
             if (tech.isFireMoveLock) {
@@ -407,7 +407,7 @@ const tech = {
         requires: "not skinned, Ψ(t) collapse, many-worlds",
         damage: 2.42,
         effect() {
-            m.skin.anodize();
+          playerLocal.skin.anodize();
             tech.damage *= this.damage
             tech.isCollisionRealitySwitch = true;
         },
@@ -430,7 +430,7 @@ const tech = {
         requires: "not skinned",
         effect() {
             tech.isDilate = true
-            m.skin.dilate()
+          playerLocal.skin.dilate()
         },
         remove() {
             tech.isDilate = false
@@ -451,8 +451,8 @@ const tech = {
         requires: "aperture",
         effect() {
             tech.isDiaphragm = true
-            m.resetSkin();
-            m.skin.dilate2()
+          playerLocal.resetSkin();
+          playerLocal.skin.dilate2()
         },
         remove() {
             tech.isDiaphragm = false
@@ -473,15 +473,15 @@ const tech = {
         },
         requires: "not piezoelectricity, CPT, annihilation",
         effect() {
-            m.health = 0
+          playerLocal.health = 0
             document.getElementById("health").style.display = "none"
             document.getElementById("health-bg").style.display = "none"
             document.getElementById("dmg").style.backgroundColor = "#0cf";
             tech.isEnergyHealth = true;
             simulation.mobDmgColor = "rgba(0, 255, 255,0.6)" //"#0cf"
-            m.displayHealth();
-            m.lastCalculatedDefense = 0 //this triggers a redraw of the defense bar
-            m.skin.energy();
+          playerLocal.displayHealth();
+          playerLocal.lastCalculatedDefense = 0 //this triggers a redraw of the defense bar
+          playerLocal.skin.energy();
         },
         remove() {
             if (tech.isEnergyHealth) {
@@ -489,11 +489,11 @@ const tech = {
                 document.getElementById("health").style.display = "inline"
                 document.getElementById("health-bg").style.display = "inline"
                 document.getElementById("dmg").style.backgroundColor = "#f67";
-                m.health = Math.max(Math.min(m.maxHealth, m.energy), 0.1);
+              playerLocal.health = Math.max(Math.min(m.maxHealth, m.energy), 0.1);
                 simulation.mobDmgColor = "rgba(255,0,0,0.7)"
-                m.displayHealth();
-                m.lastCalculatedDefense = 0 //this triggers a redraw of the defense bar
-                m.resetSkin();
+              playerLocal.displayHealth();
+              playerLocal.lastCalculatedDefense = 0 //this triggers a redraw of the defense bar
+              playerLocal.resetSkin();
             }
             tech.isEnergyHealth = false;
         }
@@ -548,7 +548,7 @@ const tech = {
         requires: "not skinned, standing wave, max energy reduction, retrocausality, mass-energy",
         effect() {
             tech.isRewindAvoidDeath = true;
-            m.skin.CPT()
+          playerLocal.skin.CPT()
         },
         remove() {
             tech.isRewindAvoidDeath = false;
@@ -2249,7 +2249,7 @@ const tech = {
         requires: "flip-flop",
         effect() {
             tech.isFlipFlopHealth = true;
-            m.setMaxHealth();
+          playerLocal.setMaxHealth();
             for (let i = 0; i < powerUp.length; i++) {
                 if (powerUp[i].name === "heal") {
                     const oldSize = powerUp[i].size
@@ -2261,7 +2261,7 @@ const tech = {
         },
         remove() {
             tech.isFlipFlopHealth = false;
-            m.setMaxHealth();
+          playerLocal.setMaxHealth();
             for (let i = 0; i < powerUp.length; i++) {
                 if (powerUp[i].name === "heal") {
                     const oldSize = powerUp[i].size
@@ -2282,10 +2282,10 @@ const tech = {
                 if (document.getElementById("tech-flip-flop")) {
                     if (tech.isFlipFlopOn) {
                         document.getElementById("tech-flip-flop").innerHTML = ` = <strong>ON</strong>`
-                        m.eyeFillColor = m.fieldMeterColor //'#5af'
+                      playerLocal.eyeFillColor = m.fieldMeterColor //'#5af'
                     } else {
                         document.getElementById("tech-flip-flop").innerHTML = ` = <strong>OFF</strong>`
-                        m.eyeFillColor = "transparent"
+                      playerLocal.eyeFillColor = "transparent"
                     }
                 }
             }, 100);
@@ -2304,7 +2304,7 @@ const tech = {
                 tech.isFlipFlopOn = true //what is the state of flip-Flop?
             }
             // if (!m.isShipMode) {
-            //     m.skin.flipFlop()
+            //   playerLocal.skin.flipFlop()
             // }
         },
         remove() {
@@ -2312,7 +2312,7 @@ const tech = {
             if (tech.isFlipFlopOn) {
                 tech.isFlipFlopOn = false //what is the state of flip-Flop?
             }
-            m.eyeFillColor = 'transparent'
+          playerLocal.eyeFillColor = 'transparent'
             // m.resetSkin();
         }
     },
@@ -2389,7 +2389,7 @@ const tech = {
     //     effect() {
     //         tech.isFlipFlopCoupling = true;
     //         if (tech.isFlipFlopOn) {
-    //             m.couplingChange(this.bonus)
+    //           playerLocal.couplingChange(this.bonus)
     //         } else {
     //             for (let i = 0; i < mob.length; i++) {
     //                 if (mob[i].isDecoupling) mob[i].alive = false //remove WIMP
@@ -2403,7 +2403,7 @@ const tech = {
     //         if (this.count) {
     //             if (tech.isFlipFlop || tech.isRelay) {
     //                 if (tech.isFlipFlopOn) {
-    //                     m.couplingChange(-this.bonus)
+    //                   playerLocal.couplingChange(-this.bonus)
     //                 } else {
     //                     for (let i = 0; i < mob.length; i++) {
     //                         if (mob[i].isDecoupling) mob[i].alive = false //remove WIMP
@@ -2422,10 +2422,10 @@ const tech = {
                 if (document.getElementById("tech-switch")) {
                     if (tech.isFlipFlopOn) {
                         document.getElementById("tech-switch").innerHTML = ` = <strong>ON</strong>`
-                        m.eyeFillColor = m.fieldMeterColor //'#5af'
+                      playerLocal.eyeFillColor = m.fieldMeterColor //'#5af'
                     } else {
                         document.getElementById("tech-switch").innerHTML = ` = <strong>OFF</strong>`
-                        m.eyeFillColor = "transparent"
+                      playerLocal.eyeFillColor = "transparent"
                     }
                 }
             }, 100);
@@ -2439,13 +2439,13 @@ const tech = {
         },
         requires: "not flip-flop",
         effect() {
-            m.isAltSkin = true
+          playerLocal.isAltSkin = true
             tech.isRelay = true //do you have this tech?
             if (!tech.isFlipFlopOn) {
                 tech.isFlipFlopOn = true //what is the state of flip-Flop?
             }
             // if (!m.isShipMode) {
-            //     m.skin.flipFlop()
+            //   playerLocal.skin.flipFlop()
             // }
         },
         remove() {
@@ -2453,7 +2453,7 @@ const tech = {
             if (tech.isFlipFlopOn) {
                 tech.isFlipFlopOn = false //what is the state of flip-Flop?
             }
-            m.eyeFillColor = 'transparent'
+          playerLocal.eyeFillColor = 'transparent'
             // m.resetSkin();
         }
     },
@@ -2470,11 +2470,11 @@ const tech = {
         requires: "relay switch",
         effect() {
             tech.isRelayEnergy = true
-            m.setMaxEnergy()
+          playerLocal.setMaxEnergy()
         },
         remove() {
             tech.isRelayEnergy = false
-            m.setMaxEnergy()
+          playerLocal.setMaxEnergy()
         }
     },
     {
@@ -2622,11 +2622,11 @@ const tech = {
         },
         requires: "",
         effect() {
-            m.collisionImmuneCycles += 210;
+          playerLocal.collisionImmuneCycles += 210;
             if (m.immuneCycle < m.cycle + m.collisionImmuneCycles) m.immuneCycle = m.cycle + m.collisionImmuneCycles; //player is immune to damage
         },
         remove() {
-            m.collisionImmuneCycles = 30;
+          playerLocal.collisionImmuneCycles = 30;
         }
     },
     {
@@ -2719,13 +2719,13 @@ const tech = {
         requires: "not time crystals",
         effect() {
             tech.isGroundState = true
-            m.setFieldRegen()
-            m.setMaxEnergy()
+          playerLocal.setFieldRegen()
+          playerLocal.setMaxEnergy()
         },
         remove() {
             tech.isGroundState = false
-            m.setFieldRegen()
-            m.setMaxEnergy()
+          playerLocal.setFieldRegen()
+          playerLocal.setMaxEnergy()
         }
     },
     {
@@ -2741,12 +2741,12 @@ const tech = {
         effect() {
             tech.damage *= this.damage
             tech.isMaxEnergyTech = true;
-            m.setMaxEnergy()
+          playerLocal.setMaxEnergy()
         },
         remove() {
             if (this.count) tech.damage /= this.damage
             tech.isMaxEnergyTech = false;
-            m.setMaxEnergy()
+          playerLocal.setMaxEnergy()
         }
     },
     {
@@ -2799,13 +2799,13 @@ const tech = {
         requires: "",
         effect() {
             tech.bonusEnergy += 0.66
-            m.setMaxEnergy()
+          playerLocal.setMaxEnergy()
             this.refundAmount += tech.addJunkTechToPool(0.05)
         },
         refundAmount: 0,
         remove() {
             tech.bonusEnergy = 0;
-            m.setMaxEnergy()
+          playerLocal.setMaxEnergy()
             if (this.count > 0 && this.refundAmount > 0) {
                 tech.removeJunkTechFromPool(this.refundAmount)
                 this.refundAmount = 0
@@ -2849,14 +2849,14 @@ const tech = {
         requires: "not parasitism",
         effect() {
             tech.isCrouchRegen = true; //only used to check for requirements
-            m.regenEnergy = function () {
+          playerLocal.regenEnergy = function () {
                 if (m.immuneCycle < m.cycle && m.crouch && m.fieldCDcycle < m.cycle) m.energy += 7 * m.fieldRegen;
                 if (m.energy < 0) m.energy = 0
             }
         },
         remove() {
             tech.isCrouchRegen = false;
-            m.regenEnergy = m.regenEnergyDefault
+          playerLocal.regenEnergy = m.regenEnergyDefault
         }
     },
     {
@@ -2890,7 +2890,7 @@ const tech = {
         requires: "not inductive charging",
         effect() {
             tech.isDamageAfterKillNoRegen = true;
-            m.regenEnergy = function () {
+          playerLocal.regenEnergy = function () {
                 if (m.immuneCycle < m.cycle && (m.lastKillCycle + 300 < m.cycle) && m.fieldCDcycle < m.cycle) m.energy += m.fieldRegen;
                 if (m.energy < 0) m.energy = 0
             }
@@ -4064,7 +4064,7 @@ const tech = {
         },
         remove() {
             if (this.count) {
-                m.couplingChange(-this.researchUsed * this.couplingToResearch)
+              playerLocal.couplingChange(-this.researchUsed * this.couplingToResearch)
                 powerUps.research.changeRerolls(this.researchUsed)
                 this.researchUsed = 0
             }
@@ -7595,13 +7595,13 @@ const tech = {
         requires: "standing wave, not surface plasmons",
         effect() {
             tech.harmonics++
-            m.fieldShieldingScale = 1.6 * Math.pow(0.5, (tech.harmonics - 2))
-            m.harmonicShield = m.harmonicAtomic
+          playerLocal.fieldShieldingScale = 1.6 * Math.pow(0.5, (tech.harmonics - 2))
+          playerLocal.harmonicShield = m.harmonicAtomic
         },
         remove() {
             tech.harmonics = 2
-            m.fieldShieldingScale = 1.6 * Math.pow(0.5, (tech.harmonics - 2))
-            m.harmonicShield = m.harmonic3Phase
+          playerLocal.fieldShieldingScale = 1.6 * Math.pow(0.5, (tech.harmonics - 2))
+          playerLocal.harmonicShield = m.harmonic3Phase
         }
     },
     {
@@ -7637,14 +7637,14 @@ const tech = {
         requires: "standing wave, pilot wave, time dilation",
         effect() {
             tech.harmonicEnergy = 1
-            m.setMaxEnergy()
+          playerLocal.setMaxEnergy()
             for (let i = 0; i < 2; i++) {
                 if (powerUps.research.count > 0) powerUps.research.changeRerolls(-1)
             }
         },
         remove() {
             tech.harmonicEnergy = 0;
-            m.setMaxEnergy()
+          playerLocal.setMaxEnergy()
             if (this.count > 0) powerUps.research.changeRerolls(2)
         }
     },
@@ -7662,14 +7662,14 @@ const tech = {
         requires: "standing wave",
         effect() {
             tech.isStandingWaveExpand = true
-            m.setMaxEnergy()
+          playerLocal.setMaxEnergy()
             // m.fieldShieldingScale = (tech.isStandingWaveExpand ? 0.9 : 1.6) * Math.pow(0.6, (tech.harmonics - 2))
         },
         remove() {
             tech.isStandingWaveExpand = false
-            m.setMaxEnergy()
+          playerLocal.setMaxEnergy()
             // m.fieldShieldingScale = (tech.isStandingWaveExpand ? 0.9 : 1.6) * Math.pow(0.6, (tech.harmonics - 2))
-            m.harmonicRadius = 1
+          playerLocal.harmonicRadius = 1
         }
     },
     {
@@ -7897,7 +7897,7 @@ const tech = {
             tech.isNeutronium = true
             tech.baseFx *= 0.8
             tech.baseJumpForce *= 0.8
-            m.setMovement()
+          playerLocal.setMovement()
         },
         //also removed in m.setHoldDefaults() if player switches into a bad field
         remove() {
@@ -7905,7 +7905,7 @@ const tech = {
             if (!tech.isFreeWormHole) {
                 tech.baseFx = 0.08
                 tech.baseJumpForce = 10.5
-                m.setMovement()
+              playerLocal.setMovement()
             }
         }
     },
@@ -8003,7 +8003,7 @@ const tech = {
             for (let i = 0; i < 2; i++) {
                 if (powerUps.research.count > 0) powerUps.research.changeRerolls(-1)
             }
-            m.energy = 0.01;
+          playerLocal.energy = 0.01;
             b.randomBot()
             b.randomBot()
             b.randomBot()
@@ -8209,7 +8209,7 @@ const tech = {
         requires: "molecular assembler, pilot wave, standing wave",
         effect() {
             tech.isMassEnergy = true // used in m.grabPowerUp
-            m.energy += 2
+          playerLocal.energy += 2
         },
         remove() {
             tech.isMassEnergy = false;
@@ -8318,7 +8318,7 @@ const tech = {
                 document.getElementById("field-" + m.fieldMode).classList.remove("build-field-selected");
                 document.getElementById("field-0").classList.add("build-field-selected");
             }
-            m.setField("field emitter")
+          playerLocal.setField("field emitter")
             for (let i = 0; i < 2; i++) {
                 if (powerUps.research.count > 0) powerUps.research.changeRerolls(-1)
             }
@@ -8329,7 +8329,7 @@ const tech = {
                 b.clearPermanentBots();
                 b.respawnBots();
                 if (m.fieldMode === 0) {
-                    m.setField("plasma torch")
+                  playerLocal.setField("plasma torch")
                     if (build.isExperimentSelection) {
                         document.getElementById("field-0").classList.remove("build-field-selected");
                         document.getElementById("field-" + m.fieldMode).classList.add("build-field-selected");
@@ -8377,7 +8377,7 @@ const tech = {
         requires: "plasma torch, not plasma ball",
         effect() {
             tech.isExtruder = true;
-            m.fieldUpgrades[m.fieldMode].set()
+          playerLocal.fieldUpgrades[m.fieldMode].set()
         },
         remove() {
             tech.isExtruder = false;
@@ -8417,7 +8417,7 @@ const tech = {
         requires: "plasma torch, not extruder, plasma jet",
         effect() {
             tech.isPlasmaBall = true;
-            m.fieldUpgrades[m.fieldMode].set()
+          playerLocal.fieldUpgrades[m.fieldMode].set()
         },
         remove() {
             tech.isPlasmaBall = false;
@@ -8457,8 +8457,8 @@ const tech = {
         requires: "time dilation, not CPT symmetry",
         effect() {
             tech.isRewindField = true;
-            m.fieldUpgrades[6].set()
-            m.wakeCheck();
+          playerLocal.fieldUpgrades[6].set()
+          playerLocal.wakeCheck();
         },
         remove() {
             tech.isRewindField = false;
@@ -8479,7 +8479,7 @@ const tech = {
         requires: "time dilation",
         effect() {
             tech.isTimeStop = true;
-            m.fieldHarmReduction = 0.66; //33% reduction
+          playerLocal.fieldHarmReduction = 0.66; //33% reduction
         },
         remove() {
             tech.isTimeStop = false;
@@ -8500,7 +8500,7 @@ const tech = {
         requires: "time dilation or pilot wave",
         effect() {
             tech.isFastTime = true
-            m.setMovement();
+          playerLocal.setMovement();
             b.setFireCD();
             for (let i = 0; i < 3; i++) {
                 if (powerUps.research.count > 0) powerUps.research.changeRerolls(-1)
@@ -8508,7 +8508,7 @@ const tech = {
         },
         remove() {
             tech.isFastTime = false
-            m.setMovement();
+          playerLocal.setMovement();
             b.setFireCD();
             if (this.count > 0) powerUps.research.changeRerolls(3)
         }
@@ -8530,14 +8530,14 @@ const tech = {
         requires: "time dilation or pilot wave, not ground state",
         effect() {
             tech.isTimeCrystals = true
-            m.setFieldRegen()
+          playerLocal.setFieldRegen()
             this.descriptionFunction = function () {
                 return `<strong>+150%</strong> passive <strong class='color-f'>energy</strong> generation<br><em>(+${(60 * m.fieldRegen * 60).toFixed(1)} energy per second)</em>`
             }
         },
         remove() {
             tech.isTimeCrystals = false
-            m.setFieldRegen()
+          playerLocal.setFieldRegen()
             this.descriptionFunction = function () {
                 return `<strong>+150%</strong> passive <strong class='color-f'>energy</strong> generation<br><em>(+${(150 * m.fieldRegen * 60).toFixed(1)} energy per second)</em>`
             }
@@ -8907,7 +8907,7 @@ const tech = {
             tech.isFreeWormHole = true
             tech.baseFx *= 0.66
             tech.baseJumpForce *= 0.66
-            m.setMovement()
+          playerLocal.setMovement()
         },
         //also removed in m.setHoldDefaults() if player switches into a bad field
         remove() {
@@ -8915,7 +8915,7 @@ const tech = {
             if (!tech.isNeutronium) {
                 tech.baseFx = 0.08
                 tech.baseJumpForce = 10.5
-                m.setMovement()
+              playerLocal.setMovement()
             }
         }
     },
@@ -9053,7 +9053,7 @@ const tech = {
     //     },
     //     requires: "",
     //     effect() {
-    //         m.shipMode()
+    //       playerLocal.shipMode()
     //     },
     //     remove() {}
     // },
@@ -9073,7 +9073,7 @@ const tech = {
     //     effect() {
     //         this.interval = setInterval(() => {
     //             if (!build.isExperimentSelection) {
-    //                 m.switchWorlds()
+    //               playerLocal.switchWorlds()
     //                 simulation.trails()
     //             }
     //         }, 20000); //every 20 seconds
@@ -9122,13 +9122,13 @@ const tech = {
     //     },
     //     requires: "not ship",
     //     effect() {
-    //         m.look = () => {
-    //             m.angle = 2 * Math.sin(m.cycle * 0.0133) + Math.sin(m.cycle * 0.013) + 0.5 * Math.sin(m.cycle * 0.031) + 0.33 * Math.sin(m.cycle * 0.03)
+    //       playerLocal.look = () => {
+    //           playerLocal.angle = 2 * Math.sin(m.cycle * 0.0133) + Math.sin(m.cycle * 0.013) + 0.5 * Math.sin(m.cycle * 0.031) + 0.33 * Math.sin(m.cycle * 0.03)
     //             const scale = 0.8;
-    //             m.transSmoothX = canvas.width2 - m.pos.x - (simulation.mouse.x - canvas.width2) * scale;
-    //             m.transSmoothY = canvas.height2 - m.pos.y - (simulation.mouse.y - canvas.height2) * scale;
-    //             m.transX += (m.transSmoothX - m.transX) * 0.07;
-    //             m.transY += (m.transSmoothY - m.transY) * 0.07;
+    //           playerLocal.transSmoothX = canvas.width2 - m.pos.x - (simulation.mouse.x - canvas.width2) * scale;
+    //           playerLocal.transSmoothY = canvas.height2 - m.pos.y - (simulation.mouse.y - canvas.height2) * scale;
+    //           playerLocal.transX += (m.transSmoothX - m.transX) * 0.07;
+    //           playerLocal.transY += (m.transSmoothY - m.transY) * 0.07;
     //         }
     //     },
     //     remove() {
@@ -9514,8 +9514,8 @@ const tech = {
                     if (!(simulation.cycle % 720)) {
                         requestAnimationFrame(() => {
                             if ((simulation.cycle % 1440) > 720) { //kinda alternate between each option
-                                m.rewind(60)
-                                m.energy += 0.4 //to make up for lost energy
+                              playerLocal.rewind(60)
+                              playerLocal.energy += 0.4 //to make up for lost energy
                             } else {
                                 simulation.timePlayerSkip(60)
                             }
@@ -9702,8 +9702,8 @@ const tech = {
         },
         requires: "not quenching, tungsten carbide, mass-energy",
         effect() {
-            m.baseHealth = 0.01
-            m.setMaxHealth();
+          playerLocal.baseHealth = 0.01
+          playerLocal.setMaxHealth();
             for (let i = 0; i < b.guns.length; i++) b.guns[i].ammo = b.guns[i].ammo * Math.pow(2, 10)
             simulation.updateGunHUD();
         },
@@ -9722,18 +9722,18 @@ const tech = {
         },
         requires: "",
         effect() {
-            m.look = () => {
+          playerLocal.look = () => {
                 //always on mouse look
-                m.angle = Math.atan2(
+              playerLocal.angle = Math.atan2(
                     simulation.mouseInGame.y - m.pos.y,
                     simulation.mouseInGame.x - m.pos.x
                 );
                 //smoothed mouse look translations
                 const scale = 2;
-                m.transSmoothX = canvas.width2 - m.pos.x - (simulation.mouse.x - canvas.width2) * scale;
-                m.transSmoothY = canvas.height2 - m.pos.y - (simulation.mouse.y - canvas.height2) * scale;
-                m.transX += (m.transSmoothX - m.transX) * m.lookSmoothing;
-                m.transY += (m.transSmoothY - m.transY) * m.lookSmoothing;
+              playerLocal.transSmoothX = canvas.width2 - m.pos.x - (simulation.mouse.x - canvas.width2) * scale;
+              playerLocal.transSmoothY = canvas.height2 - m.pos.y - (simulation.mouse.y - canvas.height2) * scale;
+              playerLocal.transX += (m.transSmoothX - m.transX) * m.lookSmoothing;
+              playerLocal.transY += (m.transSmoothY - m.transY) * m.lookSmoothing;
             }
         },
         remove() {
@@ -9753,18 +9753,18 @@ const tech = {
         },
         requires: "",
         effect() {
-            m.look = () => {
+          playerLocal.look = () => {
                 //always on mouse look
-                m.angle = Math.atan2(
+              playerLocal.angle = Math.atan2(
                     simulation.mouseInGame.y - m.pos.y,
                     simulation.mouseInGame.x - m.pos.x
                 );
                 //smoothed mouse look translations
                 const scale = 1.2;
-                m.transSmoothX = canvas.width2 - m.pos.x - (simulation.mouse.x - canvas.width2) * scale;
-                m.transSmoothY = canvas.height2 - m.pos.y - (simulation.mouse.y - canvas.height2) * scale;
-                m.transX = canvas.width2 - m.pos.x - (simulation.mouse.x - canvas.width2) * scale;
-                m.transY = canvas.height2 - m.pos.y - (simulation.mouse.y - canvas.height2) * scale;
+              playerLocal.transSmoothX = canvas.width2 - m.pos.x - (simulation.mouse.x - canvas.width2) * scale;
+              playerLocal.transSmoothY = canvas.height2 - m.pos.y - (simulation.mouse.y - canvas.height2) * scale;
+              playerLocal.transX = canvas.width2 - m.pos.x - (simulation.mouse.x - canvas.width2) * scale;
+              playerLocal.transY = canvas.height2 - m.pos.y - (simulation.mouse.y - canvas.height2) * scale;
                 // m.transX += (m.transSmoothX - m.transX) * m.lookSmoothing;
                 // m.transY += (m.transSmoothY - m.transY) * m.lookSmoothing;
             }
@@ -10162,16 +10162,16 @@ const tech = {
         },
         requires: "",
         effect() {
-            m.look = function () {
+          playerLocal.look = function () {
                 //always on mouse look
-                m.angle = (((m.pos.x + m.pos.y) / 100 + Math.PI) % Math.PI * 2) - Math.PI
+              playerLocal.angle = (((m.pos.x + m.pos.y) / 100 + Math.PI) % Math.PI * 2) - Math.PI
                 //smoothed mouse look translations
                 const scale = 0.8;
-                m.transSmoothX = canvas.width2 - m.pos.x - (simulation.mouse.x - canvas.width2) * scale;
-                m.transSmoothY = canvas.height2 - m.pos.y - (simulation.mouse.y - canvas.height2) * scale;
+              playerLocal.transSmoothX = canvas.width2 - m.pos.x - (simulation.mouse.x - canvas.width2) * scale;
+              playerLocal.transSmoothY = canvas.height2 - m.pos.y - (simulation.mouse.y - canvas.height2) * scale;
 
-                m.transX += (m.transSmoothX - m.transX) * 0.07;
-                m.transY += (m.transSmoothY - m.transY) * 0.07;
+              playerLocal.transX += (m.transSmoothX - m.transX) * 0.07;
+              playerLocal.transY += (m.transSmoothY - m.transY) * 0.07;
             }
         },
         remove() {
@@ -10189,8 +10189,8 @@ const tech = {
         allowed() { return true },
         requires: "",
         effect() {
-            m.health = 0.01 //set health to 1
-            m.displayHealth();
+          playerLocal.health = 0.01 //set health to 1
+          playerLocal.displayHealth();
             for (let i = mob.length - 1; i > -1; i--) { //replace mobs with zombies
                 if (mob[i].isDropPowerUp && !mob[i].isBoss && mob[i].alive) {
                     mob[i].isSoonZombie = true
@@ -10279,14 +10279,14 @@ const tech = {
         },
         requires: "not ship",
         effect() {
-            m.look = () => {
-                m.angle = 2 * Math.sin(m.cycle * 0.0133) + Math.sin(m.cycle * 0.013) + 0.5 * Math.sin(m.cycle * 0.031) + 0.33 * Math.sin(m.cycle * 0.03)
+          playerLocal.look = () => {
+              playerLocal.angle = 2 * Math.sin(m.cycle * 0.0133) + Math.sin(m.cycle * 0.013) + 0.5 * Math.sin(m.cycle * 0.031) + 0.33 * Math.sin(m.cycle * 0.03)
                 const scale = 0.8;
                 simulation.mouse.y
-                m.transSmoothX = canvas.width2 - m.pos.x - (simulation.mouse.x - canvas.width2) * scale;
-                m.transSmoothY = canvas.height2 - m.pos.y - (simulation.mouse.y - canvas.height2) * scale;
-                m.transX += (m.transSmoothX - m.transX) * 0.07;
-                m.transY += (m.transSmoothY - m.transY) * 0.07;
+              playerLocal.transSmoothX = canvas.width2 - m.pos.x - (simulation.mouse.x - canvas.width2) * scale;
+              playerLocal.transSmoothY = canvas.height2 - m.pos.y - (simulation.mouse.y - canvas.height2) * scale;
+              playerLocal.transX += (m.transSmoothX - m.transX) * 0.07;
+              playerLocal.transY += (m.transSmoothY - m.transY) * 0.07;
             }
         },
         remove() {
@@ -10387,7 +10387,7 @@ const tech = {
         requires: "",
         effect() {
             setInterval(() => {
-                m.switchWorlds()
+              playerLocal.switchWorlds()
                 simulation.trails()
             }, 20000); //every 30 seconds
         },
@@ -10679,8 +10679,8 @@ const tech = {
         requires: "",
         effect() {
             setInterval(() => {
-                m.rewind(120)
-                m.energy += 0.4
+              playerLocal.rewind(120)
+              playerLocal.energy += 0.4
             }, 10000);
             // for (let i = 0; i < 24; i++) {
             //     setTimeout(() => { m.rewind(120) }, i * 5000);
@@ -10702,8 +10702,8 @@ const tech = {
         requires: "",
         effect() {
             setInterval(() => {
-                m.rewind(30)
-                m.energy += 0.2
+              playerLocal.rewind(30)
+              playerLocal.energy += 0.2
             }, 4000);
         },
         remove() { }
@@ -10723,7 +10723,7 @@ const tech = {
         effect() {
             for (let i = 0, len = 40; i < len; i++) {
                 setTimeout(() => {
-                    m.energy -= 1 / len
+                  playerLocal.energy -= 1 / len
                     where = Vector.add(m.pos, { x: 400 * (Math.random() - 0.5), y: 400 * (Math.random() - 0.5) })
                     spawn.bodyRect(where.x, where.y, Math.floor(15 + 100 * Math.random()), Math.floor(15 + 100 * Math.random()));
                 }, i * 100);
@@ -10809,9 +10809,9 @@ const tech = {
             setInterval(() => {
                 if (!simulation.paused) {
                     const energy = m.energy
-                    m.energy = 0
+                  playerLocal.energy = 0
                     setTimeout(() => { //return energy
-                        m.energy += 2 * energy
+                      playerLocal.energy += 2 * energy
                     }, 5000);
                 }
             }, 10000);
@@ -10885,7 +10885,7 @@ const tech = {
         },
         requires: "",
         effect() {
-            m.skin.stubs()
+          playerLocal.skin.stubs()
             Matter.Body.scale(player.parts[3], 2, 2);
         },
         remove() {
@@ -10904,7 +10904,7 @@ const tech = {
         },
         requires: "",
         effect() {
-            m.skin.Sleipnir()
+          playerLocal.skin.Sleipnir()
         },
         remove() {
             if (this.count) m.resetSkin();
@@ -10922,7 +10922,7 @@ const tech = {
         },
         requires: "",
         effect() {
-            m.skin.diegesis()
+          playerLocal.skin.diegesis()
         },
         remove() {
             if (this.count) m.resetSkin();
@@ -10940,7 +10940,7 @@ const tech = {
         },
         requires: "",
         effect() {
-            m.skin.cat();
+          playerLocal.skin.cat();
         },
         remove() {
             if (this.count) m.resetSkin();
@@ -10958,7 +10958,7 @@ const tech = {
         },
         requires: "",
         effect() {
-            m.draw = () => { }
+          playerLocal.draw = () => { }
         },
         remove() {
             if (this.count) m.resetSkin();
@@ -10977,7 +10977,7 @@ const tech = {
         },
         requires: "",
         effect() {
-            m.skin.pareidolia()
+          playerLocal.skin.pareidolia()
         },
         remove() {
             if (this.count) m.resetSkin();
@@ -10995,10 +10995,10 @@ const tech = {
         },
         requires: "",
         effect() {
-            m.yOffWhen.stand = 70
+          playerLocal.yOffWhen.stand = 70
         },
         remove() {
-            m.yOffWhen.stand = 49
+          playerLocal.yOffWhen.stand = 49
         }
     },
     {
@@ -11015,7 +11015,7 @@ const tech = {
         requires: "",
         effect() {
             setInterval(() => {
-                m.yOffWhen.stand = 53 + 28 * Math.sin(simulation.cycle * 0.2)
+              playerLocal.yOffWhen.stand = 53 + 28 * Math.sin(simulation.cycle * 0.2)
                 if (m.onGround && !m.crouch) m.yOffGoal = m.yOffWhen.stand
             }, 100);
         },
@@ -11034,14 +11034,14 @@ const tech = {
         },
         requires: "",
         effect() {
-            m.color = {
+          playerLocal.color = {
                 hue: 0,
                 sat: 100,
                 light: 50
             }
             setInterval(function () {
-                m.color.hue++
-                m.setFillColors()
+              playerLocal.color.hue++
+              playerLocal.setFillColors()
             }, 10);
         },
         remove() { }
@@ -11077,8 +11077,8 @@ const tech = {
         },
         requires: "",
         effect() {
-            m.isAltSkin = true
-            m.shipMode()
+          playerLocal.isAltSkin = true
+          playerLocal.shipMode()
             level.difficultyDecrease(simulation.difficultyMode)
             //unlock relativistic rotation
             for (let i = 0; i < tech.tech.length; i++) {
@@ -11102,12 +11102,12 @@ const tech = {
         effect() {
             tech.damage *= 3
 
-            m.look = () => {
+          playerLocal.look = () => {
                 // const scale = 0;
-                m.transSmoothX = canvas.width2 - m.pos.x // - (simulation.mouse.x - canvas.width2) * scale;
-                m.transSmoothY = canvas.height2 - m.pos.y // - (simulation.mouse.y - canvas.height2) * scale;
-                m.transX += (m.transSmoothX - m.transX) * m.lookSmoothing;
-                m.transY += (m.transSmoothY - m.transY) * m.lookSmoothing;
+              playerLocal.transSmoothX = canvas.width2 - m.pos.x // - (simulation.mouse.x - canvas.width2) * scale;
+              playerLocal.transSmoothY = canvas.height2 - m.pos.y // - (simulation.mouse.y - canvas.height2) * scale;
+              playerLocal.transX += (m.transSmoothX - m.transX) * m.lookSmoothing;
+              playerLocal.transY += (m.transSmoothY - m.transY) * m.lookSmoothing;
                 ctx.restore();
                 ctx.save();
                 ctx.translate(canvas.width2, canvas.height2); //center
@@ -11273,7 +11273,7 @@ const tech = {
         },
         requires: "at least 4 research",
         effect() {
-            m.energy = 0
+          playerLocal.energy = 0
             spawn.suckerBoss(m.pos.x, m.pos.y - 700)
             powerUps.research.changeRerolls(-4)
             simulation.makeTextLog(`<span class='color-var'>m</span>.<span class='color-r'>research</span> <span class='color-symbol'>--</span><br>${powerUps.research.count}`)
@@ -11537,7 +11537,7 @@ const tech = {
             bc.onmessage = function (ev) {
                 if (ev.data === 'tech') powerUps.directSpawn(m.pos.x, m.pos.y, "tech");
                 if (ev.data === 'death') {
-                    m.death()
+                  playerLocal.death()
                     bc.close(); //end session
                 }
                 if (ev.data === 'ready' && !bc.activated) {

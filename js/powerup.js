@@ -279,7 +279,7 @@ const powerUps = {
             <br>input.key.previousGun<span class='color-symbol'>:</span> ["<span class='color-text'>${input.key.previousGun}</span>","<span class='color-text'>MouseWheel</span>"]`
             simulation.makeTextLog(text);
         } else if (type === "field") {
-            m.setField(index)
+          playerLocal.setField(index)
         } else if (type === "tech") {
             // if (tech.isBanish && tech.tech[index].isBanished) tech.tech[index].isBanished = false
             simulation.makeTextLog(`<span class='color-var'>tech</span>.giveTech("<span class='color-text'>${tech.tech[index].name}</span>")`);
@@ -404,7 +404,7 @@ const powerUps = {
         effect() {
             powerUps.animatePowerUpGrab('rgba(0, 170, 238,0.3)')
 
-            m.couplingChange(1)
+          playerLocal.couplingChange(1)
         },
         // spawnDelay(num) {
         //     let count = num
@@ -473,7 +473,7 @@ const powerUps = {
                             if (tech.renormalization) {
                                 for (let i = 0; i < cost; i++) {
                                     if (Math.random() < 0.47) {
-                                        m.fieldCDcycle = m.cycle + 20;
+                                      playerLocal.fieldCDcycle = m.cycle + 20;
                                         powerUps.spawn(m.pos.x + 100 * (Math.random() - 0.5), m.pos.y + 100 * (Math.random() - 0.5), "research");
                                     }
                                 }
@@ -519,7 +519,7 @@ const powerUps = {
             //     simulation.makeTextLog(`powerUps.tech.length: ${Math.max(0,powerUps.tech.lastTotalChoices - banishLength)}`)
             // }
             if (tech.isResearchReality) {
-                m.switchWorlds()
+              playerLocal.switchWorlds()
                 simulation.trails()
                 simulation.makeTextLog(`simulation.amplitude <span class='color-symbol'>=</span> ${Math.random()}`);
             }
@@ -539,10 +539,10 @@ const powerUps = {
                 if (heal > 0) {
                     const overHeal = m.health + heal * simulation.healScale - m.maxHealth //used with tech.isOverHeal
                     const healOutput = Math.min(m.maxHealth - m.health, heal) * simulation.healScale
-                    m.addHealth(heal);
+                  playerLocal.addHealth(heal);
                     if (healOutput > 0) simulation.makeTextLog(`<span class='color-var'>m</span>.health <span class='color-symbol'>+=</span> ${(healOutput).toFixed(3)}`) // <br>${m.health.toFixed(3)}
                     if (tech.isOverHeal && overHeal > 0) { //tech quenching
-                        m.damage(overHeal);
+                      playerLocal.damage(overHeal);
                         simulation.makeTextLog(`<span class='color-var'>m</span>.health <span class='color-symbol'>-=</span> ${(overHeal).toFixed(3)}`) // <br>${m.health.toFixed(3)}
                         simulation.drawList.push({ //add dmg to draw queue
                             x: m.pos.x,
@@ -552,7 +552,7 @@ const powerUps = {
                             time: simulation.drawTime
                         });
                         tech.extraMaxHealth += overHeal * Math.sqrt(simulation.healScale) //increase max health
-                        m.setMaxHealth();
+                      playerLocal.setMaxHealth();
                     } else if (overHeal > 0.13) { //if leftover heals spawn a new spammer heal power up
                         requestAnimationFrame(() => {
                             powerUps.directSpawn(this.position.x, this.position.y, "heal", true, null, overHeal * 40 * (simulation.healScale ** 0.25))//    directSpawn(x, y, target, moving = true, mode = null, size = powerUps[target].size()) {
@@ -603,7 +603,7 @@ const powerUps = {
             }
             if (powerUps.healGiveMaxEnergy) {
                 tech.healMaxEnergyBonus += 0.11 * tech.largerHeals * (tech.isHalfHeals ? 0.5 : 1)
-                m.setMaxEnergy();
+              playerLocal.setMaxEnergy();
             }
         },
         spawn(x, y, size) { //used to spawn a heal with a specific size / heal amount, not normally used
@@ -1007,7 +1007,7 @@ const powerUps = {
                         const choose = options[Math.floor(Math.seededRandom(0, options.length))] //pick an element from the array of options
                         //text += `<div class="choose-grid-module" onclick="powerUps.choose('field',${choose})"><div class="grid-title"><div class="circle-grid field"></div> &nbsp; ${m.fieldUpgrades[choose].name}</div> ${m.fieldUpgrades[choose].description}</div>`                         //default
                         text += powerUps.fieldText(choose, `powerUps.choose('field',${choose})`)
-                        m.fieldUpgrades[choose].isRecentlyShown = true
+                      playerLocal.fieldUpgrades[choose].isRecentlyShown = true
                         removeOption(choose)
                         if (options.length < 1) break
                     }
@@ -1334,11 +1334,11 @@ const powerUps = {
             if (tech.isFlipFlopOn) {
                 tech.isFlipFlopOn = false
                 if (document.getElementById("tech-switch")) document.getElementById("tech-switch").innerHTML = ` = <strong>OFF</strong>`
-                m.eyeFillColor = 'transparent'
+              playerLocal.eyeFillColor = 'transparent'
             } else {
                 tech.isFlipFlopOn = true //immune to damage this hit, lose immunity for next hit
                 if (document.getElementById("tech-switch")) document.getElementById("tech-switch").innerHTML = ` = <strong>ON</strong>`
-                m.eyeFillColor = m.fieldMeterColor //'#0cf'
+              playerLocal.eyeFillColor = m.fieldMeterColor //'#0cf'
             }
             if (tech.isRelayEnergy) m.setMaxEnergy();
         }
@@ -1431,11 +1431,11 @@ const powerUps = {
                 //     if (tech.isEnergyHealth) {
                 //         if (m.maxEnergy > amount) {
                 //             tech.healMaxEnergyBonus -= amount
-                //             m.setMaxEnergy();
+                //           playerLocal.setMaxEnergy();
                 //         }
                 //     } else if (m.maxHealth > amount) {
                 //         tech.extraMaxHealth -= amount //decrease max health
-                //         m.setMaxHealth();
+                //       playerLocal.setMaxHealth();
                 //     }
                 // }
             }
@@ -1502,7 +1502,7 @@ const powerUps = {
                     tech.tech[choose].count = 0;
                     tech.tech[choose].isLost = true;
                     simulation.updateTechHUD();
-                    m.fieldCDcycle = m.cycle + 30; //disable field so you can't pick up the ejected tech
+                  playerLocal.fieldCDcycle = m.cycle + 30; //disable field so you can't pick up the ejected tech
                     return true
                 } else {
                     return false
@@ -1519,7 +1519,7 @@ const powerUps = {
                 tech.tech[choose].count = 0;
                 tech.tech[choose].isLost = true;
                 simulation.updateTechHUD();
-                m.fieldCDcycle = m.cycle + 30; //disable field so you can't pick up the ejected tech
+              playerLocal.fieldCDcycle = m.cycle + 30; //disable field so you can't pick up the ejected tech
                 return true
             } else {
                 return false
@@ -1532,7 +1532,7 @@ const powerUps = {
                 tech.removeTech(index)
             } else {
                 powerUps.ejectTech(index)
-                m.damage(0.06)
+              playerLocal.damage(0.06)
             }
             document.getElementById(`${index}-pause-tech`).style.textDecoration = "line-through"
             document.getElementById(`${index}-pause-tech`).style.animation = ""
