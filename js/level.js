@@ -109,7 +109,7 @@ const level = {
         level.addToWorld(); //add bodies to game engine
         simulation.draw.setPaths();
         b.respawnBots();
-      playerLocal.resetHistory();
+        m.resetHistory();
 
         if (tech.isForeverDrones) {
             if (tech.isDroneRadioactive) {
@@ -135,7 +135,7 @@ const level = {
             tech.isFlipFlopOn = true
             if (tech.isFlipFlopHealth) m.setMaxHealth()
             if (tech.isRelayEnergy) m.setMaxEnergy()
-          playerLocal.eyeFillColor = m.fieldMeterColor
+            m.eyeFillColor = m.fieldMeterColor
             simulation.makeTextLog(`tech.isFlipFlopOn <span class='color-symbol'>=</span> true`);
         }
         // if (m.plasmaBall) m.plasmaBall.reset()
@@ -160,7 +160,7 @@ const level = {
         }
         if (tech.isSwitchReality && level.levelsCleared !== 0) {
             simulation.makeTextLog(`simulation.amplitude <span class='color-symbol'>=</span> ${Math.random()}`);
-          playerLocal.switchWorlds()
+            m.switchWorlds()
             simulation.trails()
             powerUps.spawn(player.position.x + Math.random() * 50, player.position.y - Math.random() * 50, "tech", false);
         }
@@ -185,7 +185,7 @@ const level = {
     customTopLayer() { },
     setDifficulty() {
         simulation.difficulty = 0
-      playerLocal.dmgScale = 1; //damage done by player decreases each level
+        m.dmgScale = 1; //damage done by player decreases each level
         simulation.accelScale = 1 //mob acceleration increases each level
         simulation.CDScale = 1 //mob CD time decreases each level
         simulation.dmgScale = Math.max(0.1, 0.25 * simulation.difficulty) //damage done by mobs scales with total levels
@@ -194,7 +194,7 @@ const level = {
     difficultyIncrease(num = 1) {
         for (let i = 0; i < num; i++) {
             simulation.difficulty++
-          playerLocal.dmgScale *= 0.905; //damage done by player decreases each level
+            m.dmgScale *= 0.905; //damage done by player decreases each level
             if (simulation.accelScale < 6) simulation.accelScale *= 1.024 //mob acceleration increases each level
             if (simulation.CDScale > 0.15) simulation.CDScale *= 0.964 //mob CD time decreases each level
         }
@@ -205,7 +205,7 @@ const level = {
     difficultyDecrease(num = 1) { //used in easy mode for simulation.reset()
         for (let i = 0; i < num; i++) {
             simulation.difficulty--
-          playerLocal.dmgScale /= 0.905; //damage done by player decreases each level
+            m.dmgScale /= 0.905; //damage done by player decreases each level
             if (simulation.accelScale > 1) simulation.accelScale /= 1.024 //mob acceleration increases each level
             if (simulation.CDScale < 1) simulation.CDScale /= 0.964 //mob CD time decreases each level
         }
@@ -344,7 +344,7 @@ const level = {
                     }
                     //draw
                     simulation.wipe();
-                  playerLocal.look();
+                    m.look();
                     simulation.camera();
                     // if (count < 30) {
                     // }
@@ -532,24 +532,24 @@ const level = {
     //     }
     // },
     setPosToSpawn(xPos, yPos) {
-      playerLocal.spawnPos.x = m.pos.x = xPos;
-      playerLocal.spawnPos.y = m.pos.y = yPos;
+        m.spawnPos.x = m.pos.x = xPos;
+        m.spawnPos.y = m.pos.y = yPos;
         level.enter.x = m.spawnPos.x - 50;
         level.enter.y = m.spawnPos.y + 20;
-      playerLocal.transX = m.transSmoothX = canvas.width2 - m.pos.x;
-      playerLocal.transY = m.transSmoothY = canvas.height2 - m.pos.y;
-      playerLocal.Vx = m.spawnVel.x;
-      playerLocal.Vy = m.spawnVel.y;
+        m.transX = m.transSmoothX = canvas.width2 - m.pos.x;
+        m.transY = m.transSmoothY = canvas.height2 - m.pos.y;
+        m.Vx = m.spawnVel.x;
+        m.Vy = m.spawnVel.y;
         player.force.x = 0;
         player.force.y = 0;
         Matter.Body.setPosition(player, m.spawnPos);
         Matter.Body.setVelocity(player, m.spawnVel);
         //makes perfect diamagnetism tech: Lenz's law show up in the right spot at the start of a level
-      playerLocal.fieldPosition = {
+        m.fieldPosition = {
             x: m.pos.x,
             y: m.pos.y
         }
-      playerLocal.fieldAngle = m.angle
+        m.fieldAngle = m.angle
     },
     enter: {
         x: 0,
@@ -764,8 +764,8 @@ const level = {
                 query(powerUp)
                 //player collision
                 if (Matter.Query.region([player], this.boostBounds).length > 0 && !input.down) {
-                  playerLocal.buttonCD_jump = 0; // reset short jump counter to prevent short jumps on boosts
-                  playerLocal.hardLandCD = 0 // disable hard landing
+                    m.buttonCD_jump = 0; // reset short jump counter to prevent short jumps on boosts
+                    m.hardLandCD = 0 // disable hard landing
                     if (player.velocity.y > 26) {
                         Matter.Body.setVelocity(player, {
                             x: player.velocity.x,
@@ -1492,7 +1492,7 @@ const level = {
                 if (player.isInPortal === this) player.isInPortal = null
             } else if (player.isInPortal !== this) { //touching player
                 if (m.buttonCD_jump === m.cycle) player.force.y = 0 // undo a jump right before entering the portal
-              playerLocal.buttonCD_jump = 0 //disable short jumps when letting go of jump key
+                m.buttonCD_jump = 0 //disable short jumps when letting go of jump key
                 player.isInPortal = this.portalPair
                 //teleport
                 if (this.portalPair.angle % (Math.PI / 2)) { //if left, right up or down
@@ -1685,8 +1685,8 @@ const level = {
                     //collision with player
                     if (this.height > 0 && Matter.Query.region([player], this).length && !(m.isCloak)) {
                         if (m.immuneCycle < m.cycle) {
-                          playerLocal.immuneCycle = m.cycle + m.collisionImmuneCycles;
-                          playerLocal.damage(damage)
+                            m.immuneCycle = m.cycle + m.collisionImmuneCycles;
+                            m.damage(damage)
                             simulation.drawList.push({ //add dmg to draw queue
                                 x: player.position.x,
                                 y: player.position.y,
@@ -1708,10 +1708,10 @@ const level = {
                         if (m.immuneCycle < m.cycle) {
                             const DRAIN = 0.004 * (tech.isRadioactiveResistance ? 0.25 : 1)
                             if (m.energy > DRAIN) {
-                              playerLocal.energy -= DRAIN
+                                m.energy -= DRAIN
                                 if (tech.isEnergyHealth && m.energy < 0) m.death()
                             } else {
-                              playerLocal.damage(damage * (tech.isRadioactiveResistance ? 0.25 : 1))
+                                m.damage(damage * (tech.isRadioactiveResistance ? 0.25 : 1))
 
                             }
                         }
@@ -1798,11 +1798,11 @@ const level = {
                 if (!m.isBodiesAsleep) {
                     const touchingPlayer = Matter.Query.collides(this, [jumpSensor])
                     if (touchingPlayer.length) {
-                      playerLocal.moverX = this.VxGoal
+                        m.moverX = this.VxGoal
                         if ((this.VxGoal > 0 && player.velocity.x < this.VxGoal) || (this.VxGoal < 0 && player.velocity.x > this.VxGoal)) {
                             player.force.x += this.force * player.mass
                         }
-                      playerLocal.Vx = player.velocity.x - this.VxGoal
+                        m.Vx = player.velocity.x - this.VxGoal
                     }
                     let pushBlock = (who) => {
                         if (!who.isMover) {
@@ -1881,11 +1881,11 @@ const level = {
                     Matter.Body.setPosition(this, { x: this.position.x + this.VxGoal, y: this.position.y }); //horizontal movement
                     const touchingPlayer = Matter.Query.collides(this, [jumpSensor])
                     if (touchingPlayer.length) {
-                      playerLocal.moverX = this.VxGoal
+                        m.moverX = this.VxGoal
                         if ((this.VxGoal > 0 && player.velocity.x < this.VxGoal) || (this.VxGoal < 0 && player.velocity.x > this.VxGoal)) {
                             player.force.x += this.force * player.mass
                         }
-                      playerLocal.Vx = player.velocity.x - this.VxGoal
+                        m.Vx = player.velocity.x - this.VxGoal
                     }
                     let pushBlock = (who) => {
                         if (!who.isMover) {
@@ -4974,7 +4974,7 @@ const level = {
                             if (Vector.magnitudeSquared(Vector.sub(m.pos, powerUp1.position)) < 90000) { //zone radius is 300
                                 //damage player and drain energy
                                 if (m.immuneCycle < m.cycle) {
-                                  playerLocal.damage(0.01);
+                                    m.damage(0.01);
                                     if (m.energy > 0.1) m.energy -= 0.02
                                 }
                                 //draw electricity going towards player
@@ -9925,8 +9925,8 @@ const level = {
                         });
                     }
                 }
-              playerLocal.damage(0.1 * simulation.difficultyMode)
-              playerLocal.energy -= 0.1 * simulation.difficultyMode
+                m.damage(0.1 * simulation.difficultyMode)
+                m.energy -= 0.1 * simulation.difficultyMode
             }
 
             if (simulation.cycle >= nextBlockSpawn && body.length < 100) {
@@ -10615,7 +10615,7 @@ const level = {
                 ctx.fillStyle = "#f00c";
                 ctx.fillRect(m.pos.x - 50, m.pos.y - 100, fireDmgLevel, 15);
 
-              playerLocal.damage(0.001 * (1.5 * isInRange + 1));
+                m.damage(0.001 * (1.5 * isInRange + 1));
 
                 drawFlame(m.pos.x, m.pos.y + 90, "#d40", Math.PI / 2 + 1);
                 drawFlame(m.pos.x, m.pos.y + 90, "#d40", Math.PI / 2 + 1);
@@ -11856,7 +11856,7 @@ const level = {
                                 }));
                                 if (m.immuneCycle < m.cycle) {
                                     if (m.energy > 0) m.energy -= 0.03;
-                                  playerLocal.damage(0.005 * simulation.dmgScale);
+                                    m.damage(0.005 * simulation.dmgScale);
                                 }
                             }
                             DrawTools.lightning(this.position, m.pos, this.lastAttackCycle, this.randomPRNGMult);
@@ -11974,7 +11974,7 @@ const level = {
                     ctx.shadowBlur = 0;
                     if (this.attackCycle >= 10) {
                         DrawTools.lightning(this.position, m.pos, simulation.cycle);
-                      playerLocal.damage(0.003 * simulation.dmgScale);
+                        m.damage(0.003 * simulation.dmgScale);
                     }
                 }
                 this.timeLimit();
@@ -11990,8 +11990,8 @@ const level = {
             me.onDeath = function () {
                 //damage player if in range
                 if (distance(player.position, this.position) < pulseRadius && m.immuneCycle < m.cycle) {
-                  playerLocal.immuneCycle = m.cycle + m.collisionImmuneCycles; //player is immune to damage
-                  playerLocal.damage(0.02 * simulation.dmgScale);
+                    m.immuneCycle = m.cycle + m.collisionImmuneCycles; //player is immune to damage
+                    m.damage(0.02 * simulation.dmgScale);
                 }
                 simulation.drawList.push({ //add dmg to draw queue
                     x: this.position.x,
@@ -12083,7 +12083,7 @@ const level = {
                 for (const ring of this.rings) {
                     const radius = ring.radius * (1 + 0.3 * Math.sin(simulation.cycle / 60 * (ring.id + 2)));
                     if (Math.abs(distance(player.position, this.position) - radius) < 60 && m.immuneCycle < simulation.cycle) {
-                      playerLocal.damage(0.4 / radius);
+                        m.damage(0.4 / radius);
                     }
                     ctx.strokeStyle = ring.colour;
                     DrawTools.arcOut(this.position.x, this.position.y, radius, 0, Math.PI * 2);
@@ -12134,7 +12134,7 @@ const level = {
                             y: -20
                         }));
                         if (m.immuneCycle < m.cycle) {
-                          playerLocal.damage(0.012 * simulation.dmgScale);
+                            m.damage(0.012 * simulation.dmgScale);
                         }
                     }
                     const lightningCycle = simulation.cycle * 2 / 3 + this.lastAttackCycle / 3;
@@ -12248,7 +12248,7 @@ const level = {
         const oldFallHeight = simulation.fallHeight;
         level.nextLevel = () => {
             color.map = "#444";
-          playerLocal.death = m.oldDeath;
+            m.death = m.oldDeath;
             canvas.style.filter = "";
             level.nextLevel = oldNextLevel;
             simulation.fallHeight = oldFallHeight;
@@ -12256,17 +12256,17 @@ const level = {
         }
         let bounds = [];
         let mobPositionsQueue = Array.from(Array(10), () => []);
-      playerLocal.oldDeath = m.death;
-      playerLocal.death = function () {
+        m.oldDeath = m.death;
+        m.death = function () {
             if (!tech.isImmortal) {
                 requestAnimationFrame(() => color.map = "#444");
-              playerLocal.death = m.oldDeath;
+                m.death = m.oldDeath;
                 canvas.style.filter = "";
                 level.nextLevel = oldNextLevel;
                 simulation.fallHeight = oldFallHeight;
-              playerLocal.oldDeath();
+                m.oldDeath();
             } else {
-              playerLocal.switchWorlds();
+                m.switchWorlds();
                 Matter.Body.setPosition(player, {
                     x: level.enter.x + 50,
                     y: level.enter.y - 20
@@ -12379,16 +12379,16 @@ const level = {
                     tech.isRewindAvoidDeath = false;
                     const DRAIN = 0.002 * (tech.isRadioactiveResistance ? 0.25 : 1) + 0.001;
                     if (m.energy > DRAIN && !tech.isEnergyHealth) {
-                      playerLocal.energy -= DRAIN;
+                        m.energy -= DRAIN;
                     }
-                  playerLocal.damage(0.00015 * (tech.isRadioactiveResistance ? 0.25 : 1));
+                    m.damage(0.00015 * (tech.isRadioactiveResistance ? 0.25 : 1));
                     if (tech.isEnergyHealth) {
                         const previousEnergy = m.energy;
-                      playerLocal.regenEnergy();
+                        m.regenEnergy();
                         const energyRegenerated = m.energy - previousEnergy;
                         if (energyRegenerated > 0) {
-                          playerLocal.energy = previousEnergy;
-                          playerLocal.damage(energyRegenerated);
+                            m.energy = previousEnergy;
+                            m.damage(energyRegenerated);
                         }
                     }
                     tech.isRewindAvoidDeath = hasCPT;
@@ -12466,9 +12466,9 @@ const level = {
                 logic() {
                     if (!this.isActive) return;
                     if (this.isHeal) {
-                      playerLocal.energy += 0.005;
+                        m.energy += 0.005;
                     } else {
-                      playerLocal.energy = Math.max(m.energy - 0.006, 0);
+                        m.energy = Math.max(m.energy - 0.006, 0);
                         if (m.energy <= 0.01 && m.immuneCycle < m.cycle) m.damage(0.002);
                     }
                 },
@@ -12598,9 +12598,9 @@ const level = {
                     const playerbounds = Rect.fromBounds(player.bounds.min, player.bounds.max);
                     if (playerbounds.hasLine(this.oneEq) || playerbounds.hasLine(this.twoEq)) {
                         if (this.isHeal) {
-                          playerLocal.energy += 0.003;
+                            m.energy += 0.003;
                         } else if (m.immuneCycle < m.cycle) {
-                          playerLocal.energy -= 0.003;
+                            m.energy -= 0.003;
                         }
                     }
                 },
@@ -12869,7 +12869,7 @@ const level = {
                     }
                 }
                 if (!isInBounds) {
-                  playerLocal.damage(0.1 * simulation.difficultyMode);
+                    m.damage(0.1 * simulation.difficultyMode);
                     trapPlayer(level.enter.x, level.enter.y);
                     simulation.makeTextLog("<span style='color: #f00'>" + name + "</span>: &nbsp; You thought I could let you get away with that?");
                 }
@@ -13263,7 +13263,7 @@ const level = {
                     break;
                 }
             }
-          playerLocal.resetHistory();
+            m.resetHistory();
         }
         const distance = (a, b) => V.magnitude(V.sub(a, b));
         const angle = (a, b) => Math.atan2(b.y - a.y, a.x - b.x);
@@ -14167,7 +14167,7 @@ const level = {
                     if (m.immuneCycle < m.cycle) {
                         // suck extra energy from the player if it's in range
                         if (m.energy > 0.1 && this.energy < 1 - 0.012) {
-                          playerLocal.energy -= 0.012
+                            m.energy -= 0.012
                             this.energy += 0.012
                         }
                         // special "sucking" graphics
@@ -14732,7 +14732,7 @@ const level = {
                     const force = Vector.mult(Vector.normalise(sub), 0.000000003)
                     if (mag < this.radius) { //heal player when inside radius
                         if (m.health < 0.7) {
-                          playerLocal.damage(-0.001);
+                            m.damage(-0.001);
                         } else if (m.health == 0.7 || m.health > 0.7) {
                             this.death()
                         }
@@ -14782,7 +14782,7 @@ const level = {
                 Matter.Body.setAngle(me, angle);
             };
             me.onHit = function () {
-              playerLocal.damage(0.01) //extra damage
+                m.damage(0.01) //extra damage
                 me.collisionFilter.mask = 0;
                 setTimeout(() => {
                     me.collisionFilter.mask = cat.player | cat.mob | cat.bullet;
@@ -14876,7 +14876,7 @@ const level = {
             if (m.pos.y > 1055) {
                 Matter.Body.setPosition(player, { x: 0, y: -150 });
                 simulation.makeTextLog(`<div><em>There is nowhere to run...</em></div>`);
-              playerLocal.damage(0.1 * simulation.difficultyMode);
+                m.damage(0.1 * simulation.difficultyMode);
             }
             if (m.alive == false && barThere == true) {
                 document.body.removeChild(bar);
@@ -15322,8 +15322,8 @@ const level = {
                         });
                     }
                 }
-              playerLocal.damage(0.1 * simulation.difficultyMode)
-              playerLocal.energy -= 0.1 * simulation.difficultyMode
+                m.damage(0.1 * simulation.difficultyMode)
+                m.energy -= 0.1 * simulation.difficultyMode
             }
             if (m.pos.y > -150 && m.pos.x > 47770 && m.pos.x < 50130) {
                 Matter.Body.setVelocity(player, {
@@ -15347,8 +15347,8 @@ const level = {
                         });
                     }
                 }
-              playerLocal.damage(0.1 * simulation.difficultyMode)
-              playerLocal.energy -= 0.1 * simulation.difficultyMode
+                m.damage(0.1 * simulation.difficultyMode)
+                m.energy -= 0.1 * simulation.difficultyMode
             }
             if (m.pos.y > -150 && 50975 < m.pos.x && m.pos.x < 54925) {
                 Matter.Body.setVelocity(player, {
@@ -15372,8 +15372,8 @@ const level = {
                         });
                     }
                 }
-              playerLocal.damage(0.1 * simulation.difficultyMode)
-              playerLocal.energy -= 0.1 * simulation.difficultyMode
+                m.damage(0.1 * simulation.difficultyMode)
+                m.energy -= 0.1 * simulation.difficultyMode
             }
             if (m.pos.y > -150 && 55025 < m.pos.x && m.pos.x < 57675) {
                 Matter.Body.setVelocity(player, {
@@ -15397,8 +15397,8 @@ const level = {
                         });
                     }
                 }
-              playerLocal.damage(0.1 * simulation.difficultyMode)
-              playerLocal.energy -= 0.1 * simulation.difficultyMode
+                m.damage(0.1 * simulation.difficultyMode)
+                m.energy -= 0.1 * simulation.difficultyMode
             }
             if (m.pos.y > -150 && 57875 < m.pos.x && m.pos.x < 58700) {
                 Matter.Body.setVelocity(player, {
@@ -15423,8 +15423,8 @@ const level = {
                         });
                     }
                 }
-              playerLocal.damage(0.1 * simulation.difficultyMode)
-              playerLocal.energy -= 0.1 * simulation.difficultyMode
+                m.damage(0.1 * simulation.difficultyMode)
+                m.energy -= 0.1 * simulation.difficultyMode
             }
             if (m.pos.y > -150 && 58875 < m.pos.x && m.pos.x < 61650) {
                 Matter.Body.setVelocity(player, {
@@ -15449,8 +15449,8 @@ const level = {
                         });
                     }
                 }
-              playerLocal.damage(0.1 * simulation.difficultyMode)
-              playerLocal.energy -= 0.1 * simulation.difficultyMode
+                m.damage(0.1 * simulation.difficultyMode)
+                m.energy -= 0.1 * simulation.difficultyMode
             }
             if (m.pos.y > -1677 && 104650 < m.pos.x && m.pos.x < 105000 && barThere == true) {
                 Matter.Body.setVelocity(player, {
@@ -15738,12 +15738,12 @@ const level = {
         level.customTopLayer = () => {
             if (player.position.x > 25360 && player.position.x < 46470 && player.position.y > -2348 || player.position.x > 87995 && player.position.x < 103950 && player.position.y > -1350) {
                 player.force.x += 0.0045
-              playerLocal.airControl = () => {
+                m.airControl = () => {
                     if (input.up) {
                         player.force.y -= 0.02
                     }
                 }
-              playerLocal.draw = () => {
+                m.draw = () => {
                     ctx.save();
                     ctx.globalAlpha = (m.immuneCycle < m.cycle) ? 1 : 0.5
                     ctx.translate(player.position.x, player.position.y);
@@ -15784,8 +15784,8 @@ const level = {
                     ctx.restore();
                 }
             } else {
-              playerLocal.resetSkin()
-              playerLocal.airControl = () => {
+                m.resetSkin()
+                m.airControl = () => {
                     if (input.up && m.buttonCD_jump + 20 < m.cycle && m.yOffWhen.stand > 23 && m.lastOnGroundCycle + 5 > m.cycle) m.jump()
                     if (m.buttonCD_jump + 60 > m.cycle && !(input.up) && m.Vy < 0) {
                         Matter.Body.setVelocity(player, {
@@ -18877,7 +18877,7 @@ const level = {
             lastPistonDirection = Math.sin((simulation.cycle + 15) / 25) < 0;
 
             if (Matter.Query.ray([player], Matter.Vector.create(piston1.position.x - 50, piston1.position.y + 175), Matter.Vector.create(piston1.position.x + 50, piston1.position.y + 175), 5).length > 0 && !dealtPiston1Damage && Math.sin(-finalGearRot) - Math.sin(-lastFinalGearRot) > 0.01) {
-              playerLocal.damage(0.1);
+                m.damage(0.1);
                 dealtPiston1Damage = true;
             }
 
@@ -18890,7 +18890,7 @@ const level = {
             }
 
             if (Matter.Query.ray([player], Matter.Vector.create(piston2.position.x - 50, piston2.position.y + 175), Matter.Vector.create(piston2.position.x + 50, piston2.position.y + 175), 5).length > 0 && !dealtPiston2Damage && Math.sin(-finalGearRot) - Math.sin(-lastFinalGearRot) < -0.01) {
-              playerLocal.damage(0.1);
+                m.damage(0.1);
                 dealtPiston2Damage = true;
             }
 
@@ -20140,9 +20140,9 @@ const level = {
             boost.query()
             slimePit.query()
             if (Matter.Query.collides(dong, [player]).length > 0 && !(m.isCloak && tech.isIntangible) && m.immuneCycle < m.cycle) {
-              playerLocal.immuneCycle = m.cycle + m.collisionImmuneCycles; //player is immune to damage for 30 cycles
+                m.immuneCycle = m.cycle + m.collisionImmuneCycles; //player is immune to damage for 30 cycles
                 const dmg = 0.05 * Math.min(simulation.dmgScale, simulation.difficulty);
-              playerLocal.damage(dmg);
+                m.damage(dmg);
                 simulation.drawList.push({ //add dmg to draw queue
                     x: dong.position.x,
                     y: dong.position.y,
@@ -20441,7 +20441,7 @@ const level = {
                     ctx.fill()
                     ctx.stroke()
                     ctx.restore()
-                  playerLocal.energy -= 0.002;
+                    m.energy -= 0.002;
 
                     ctx.save()
                     ctx.translate(this.vertices[2].x, this.vertices[2].y)
@@ -20624,9 +20624,9 @@ const level = {
                     Matter.Body.setAngularVelocity(this, 0)
                 }
                 if (Matter.Query.collides(this, [player]).length > 0 && !(m.isCloak && tech.isIntangible) && m.immuneCycle < m.cycle) {
-                  playerLocal.immuneCycle = m.cycle + m.collisionImmuneCycles; //player is immune to damage for 30 cycles // I wasnt gonna add this but since ya'll would have killed me if I didn't I added this
+                    m.immuneCycle = m.cycle + m.collisionImmuneCycles; //player is immune to damage for 30 cycles // I wasnt gonna add this but since ya'll would have killed me if I didn't I added this
                     const dmg = 0.013 * simulation.dmgScale;
-                  playerLocal.damage(dmg);
+                    m.damage(dmg);
                     simulation.drawList.push({ //add dmg to draw queue
                         x: this.position.x,
                         y: this.position.y,
@@ -20707,7 +20707,7 @@ const level = {
                     Matter.Body.setPosition(this, player.position)
                     if (player.speed > 2.5) Matter.Body.setVelocity(player, Vector.mult(player.velocity, 0.94))
                     Matter.Body.setAngularVelocity(player, player.angularVelocity * 0.9);
-                  playerLocal.damage(0.00003); //balanced? not sure
+                    m.damage(0.00003); //balanced? not sure
                 }
             }
         };
@@ -20740,9 +20740,9 @@ const level = {
                 Matter.Body.setPosition(this, Vector.add(Vector.add(who.position, who.velocity), Vector.mult(orbit, radius + radius2)))
                 //damage player
                 if (Matter.Query.collides(this, [player]).length > 0 && !(m.isCloak && tech.isIntangible) && m.immuneCycle < m.cycle) {
-                  playerLocal.immuneCycle = m.cycle + m.collisionImmuneCycles; //player is immune to damage for 30 cycles
+                    m.immuneCycle = m.cycle + m.collisionImmuneCycles; //player is immune to damage for 30 cycles
                     const dmg = 0.013 * simulation.dmgScale
-                  playerLocal.damage(dmg);
+                    m.damage(dmg);
                     simulation.drawList.push({ //add dmg to draw queue
                         x: this.position.x,
                         y: this.position.y,
@@ -20974,8 +20974,8 @@ const level = {
                 vertexCollision(where, look, map);
                 if (!m.isCloak) vertexCollision(where, look, [player]);
                 if (best.who && (best.who === player) && m.immuneCycle < m.cycle) {
-                  playerLocal.immuneCycle = m.cycle + m.collisionImmuneCycles; //player is immune to damage for an extra second
-                  playerLocal.damage(this.swordDamage);
+                    m.immuneCycle = m.cycle + m.collisionImmuneCycles; //player is immune to damage for an extra second
+                    m.damage(this.swordDamage);
                     simulation.drawList.push({ //add dmg to draw queue
                         x: best.x,
                         y: best.y,
@@ -21045,13 +21045,13 @@ const level = {
                     if (index == 1) {
                         tech.squirrelFx += 0.25;
                         tech.squirrelJump += 0.1;
-                      playerLocal.setMovement();
+                        m.setMovement();
                         powerUps.endDraft("buff");
                     } else if (index == 2) {
                         simulation.dmgScale *= 0.95;
                         powerUps.endDraft("buff");
                     } else if (index == 3) {
-                      playerLocal.dmgScale *= 1.1;
+                        m.dmgScale *= 1.1;
                         powerUps.endDraft("buff");
                     } else if (index == 4) { //sword!
                         powerUps.pass = false;
@@ -21360,8 +21360,8 @@ const level = {
                 vertexCollision(where, look, map);
                 if (!m.isCloak) vertexCollision(where, look, [player]);
                 if (best.who && (best.who === player) && m.immuneCycle < m.cycle) {
-                  playerLocal.immuneCycle = m.cycle + m.collisionImmuneCycles; //player is immune to damage for an extra second
-                  playerLocal.damage(this.swordDamage);
+                    m.immuneCycle = m.cycle + m.collisionImmuneCycles; //player is immune to damage for an extra second
+                    m.damage(this.swordDamage);
                     simulation.drawList.push({ //add dmg to draw queue
                         x: best.x,
                         y: best.y,
@@ -21472,8 +21472,8 @@ const level = {
                         }
                     }
                     if (m.immuneCycle < m.cycle) {
-                      playerLocal.immuneCycle = m.cycle + m.collisionImmuneCycles
-                      playerLocal.damage(0.025 * simulation.dmgScale)
+                        m.immuneCycle = m.cycle + m.collisionImmuneCycles
+                        m.damage(0.025 * simulation.dmgScale)
                     }
                     ctx.lineWidth = 3;
                     ctx.strokeStyle = "#000";
@@ -21538,7 +21538,7 @@ const level = {
                 if (!simulation.isTimeSkipping || input.field) {
                     requestAnimationFrame(() => {
                         simulation.timePlayerSkip(5)
-                      playerLocal.walk_cycle += m.flipLegs * m.Vx * 5
+                        m.walk_cycle += m.flipLegs * m.Vx * 5
                     }); //just doing what lilgreenland did
                 }
             }
@@ -21664,7 +21664,7 @@ const level = {
                                 x: player.velocity.x * 0.95,
                                 y: player.velocity.y * 0.95
                             });
-                          playerLocal.damage(damage)
+                            m.damage(damage)
                         }
                         hits = Matter.Query.ray(body, v1, v2, 50)
                         for (let j = 0, len = Math.min(30, hits.length); j < len; j++) {
@@ -21757,7 +21757,7 @@ const level = {
                 if (!m.isCloak) vertexCollision(where, look, [player]);
                 if (best.who && (best.who === player) && m.immuneCycle < m.cycle) {
                     const dmg = 0.0011 * simulation.dmgScale;
-                  playerLocal.damage(dmg);
+                    m.damage(dmg);
                     simulation.drawList.push({ //add dmg to draw queue
                         x: best.x,
                         y: best.y,
@@ -22093,9 +22093,9 @@ const level = {
                         Matter.Body.setAngularVelocity(this, 0)
                     }
                     if (Matter.Query.collides(this, [player]).length > 0 && !(m.isCloak && tech.isIntangible) && m.immuneCycle < m.cycle) {
-                      playerLocal.immuneCycle = m.cycle + m.collisionImmuneCycles; //player is immune to damage for 30 cycles // I wasnt gonna add this but since ya'll would have killed me if I didn't I added this
+                        m.immuneCycle = m.cycle + m.collisionImmuneCycles; //player is immune to damage for 30 cycles // I wasnt gonna add this but since ya'll would have killed me if I didn't I added this
                         const dmg = 0.013 * simulation.dmgScale;
-                      playerLocal.damage(dmg);
+                        m.damage(dmg);
                         // simulation.drawList.push({ //add dmg to draw queue
                         // x: this.position.x,
                         // y: this.position.y,
@@ -22481,7 +22481,7 @@ const level = {
             elevator2.move();
             if (player.position.x > 0 && player.position.y < -9000 && player.position.y > -10000) {
                 //m.death()
-              playerLocal.damage(0.05 * simulation.difficultyMode)
+                m.damage(0.05 * simulation.difficultyMode)
                 Matter.Body.setPosition(player, {
                     x: 275,
                     y: -12175
@@ -22939,9 +22939,9 @@ const level = {
             boost.query()
             slimePit.query()
             if (Matter.Query.collides(dong, [player]).length > 0 && !(m.isCloak && tech.isIntangible) && m.immuneCycle < m.cycle) {
-              playerLocal.immuneCycle = m.cycle + m.collisionImmuneCycles; //player is immune to damage for 30 cycles
+                m.immuneCycle = m.cycle + m.collisionImmuneCycles; //player is immune to damage for 30 cycles
                 const dmg = 0.05 * Math.min(simulation.dmgScale, simulation.difficulty);
-              playerLocal.damage(dmg);
+                m.damage(dmg);
                 simulation.drawList.push({ //add dmg to draw queue
                     x: dong.position.x,
                     y: dong.position.y,
@@ -23513,9 +23513,9 @@ const level = {
                     Matter.Body.setAngularVelocity(this, 0)
                 }
                 if (Matter.Query.collides(this, [player]).length > 0 && !(m.isCloak && tech.isIntangible) && m.immuneCycle < m.cycle) {
-                  playerLocal.immuneCycle = m.cycle + m.collisionImmuneCycles; //player is immune to damage for 30 cycles // I wasnt gonna add this but since ya'll would have killed me if I didn't I added this
+                    m.immuneCycle = m.cycle + m.collisionImmuneCycles; //player is immune to damage for 30 cycles // I wasnt gonna add this but since ya'll would have killed me if I didn't I added this
                     const dmg = 0.013 * simulation.dmgScale;
-                  playerLocal.damage(dmg);
+                    m.damage(dmg);
                     simulation.drawList.push({ //add dmg to draw queue
                         x: this.position.x,
                         y: this.position.y,
@@ -23596,7 +23596,7 @@ const level = {
                     Matter.Body.setPosition(this, player.position)
                     if (player.speed > 2.5) Matter.Body.setVelocity(player, Vector.mult(player.velocity, 0.94))
                     Matter.Body.setAngularVelocity(player, player.angularVelocity * 0.9);
-                  playerLocal.damage(0.00003); //balanced? not sure
+                    m.damage(0.00003); //balanced? not sure
                 }
             }
         };
@@ -23629,9 +23629,9 @@ const level = {
                 Matter.Body.setPosition(this, Vector.add(Vector.add(who.position, who.velocity), Vector.mult(orbit, radius + radius2)))
                 //damage player
                 if (Matter.Query.collides(this, [player]).length > 0 && !(m.isCloak && tech.isIntangible) && m.immuneCycle < m.cycle) {
-                  playerLocal.immuneCycle = m.cycle + m.collisionImmuneCycles; //player is immune to damage for 30 cycles
+                    m.immuneCycle = m.cycle + m.collisionImmuneCycles; //player is immune to damage for 30 cycles
                     const dmg = 0.013 * simulation.dmgScale
-                  playerLocal.damage(dmg);
+                    m.damage(dmg);
                     simulation.drawList.push({ //add dmg to draw queue
                         x: this.position.x,
                         y: this.position.y,
@@ -23753,9 +23753,9 @@ const level = {
                     Matter.Body.setAngularVelocity(this, 0)
                 }
                 if (Matter.Query.collides(this, [player]).length > 0 && !(m.isCloak && tech.isIntangible) && m.immuneCycle < m.cycle) {
-                  playerLocal.immuneCycle = m.cycle + m.collisionImmuneCycles; //player is immune to damage for 30 cycles // I wasnt gonna add this but since ya'll would have killed me if I didn't I added this
+                    m.immuneCycle = m.cycle + m.collisionImmuneCycles; //player is immune to damage for 30 cycles // I wasnt gonna add this but since ya'll would have killed me if I didn't I added this
                     const dmg = 0.013 * simulation.dmgScale;
-                  playerLocal.damage(dmg);
+                    m.damage(dmg);
                     // simulation.drawList.push({ //add dmg to draw queue
                     // x: this.position.x,
                     // y: this.position.y,
@@ -23787,8 +23787,8 @@ const level = {
             me.onDeath = function () {
                 //damage player if in range
                 if (Vector.magnitude(Vector.sub(player.position, this.position)) < pulseRadius && m.immuneCycle < m.cycle) {
-                  playerLocal.immuneCycle = m.cycle + m.collisionImmuneCycles; //player is immune to damage
-                  playerLocal.damage(0.015 * simulation.dmgScale);
+                    m.immuneCycle = m.cycle + m.collisionImmuneCycles; //player is immune to damage
+                    m.damage(0.015 * simulation.dmgScale);
                 }
                 simulation.drawList.push({ //add dmg to draw queue
                     x: this.position.x,
@@ -24032,8 +24032,8 @@ const level = {
                 vertexCollision(where, look, map);
                 if (!m.isCloak) vertexCollision(where, look, [player]);
                 if (best.who && (best.who === player) && m.immuneCycle < m.cycle) {
-                  playerLocal.immuneCycle = m.cycle + m.collisionImmuneCycles; //player is immune to damage for an extra second
-                  playerLocal.damage(this.swordDamage);
+                    m.immuneCycle = m.cycle + m.collisionImmuneCycles; //player is immune to damage for an extra second
+                    m.damage(this.swordDamage);
                     simulation.drawList.push({ //add dmg to draw queue
                         x: best.x,
                         y: best.y,
@@ -24487,8 +24487,8 @@ const level = {
                 vertexCollision(where, look, map);
                 if (!m.isCloak) vertexCollision(where, look, [player]);
                 if (best.who && (best.who === player) && m.immuneCycle < m.cycle) {
-                  playerLocal.immuneCycle = m.cycle + m.collisionImmuneCycles; //player is immune to damage for an extra second
-                  playerLocal.damage(this.swordDamage);
+                    m.immuneCycle = m.cycle + m.collisionImmuneCycles; //player is immune to damage for an extra second
+                    m.damage(this.swordDamage);
                     simulation.drawList.push({ //add dmg to draw queue
                         x: best.x,
                         y: best.y,
@@ -24604,8 +24604,8 @@ const level = {
                         }
                     }
                     if (m.immuneCycle < m.cycle) {
-                      playerLocal.immuneCycle = m.cycle + m.collisionImmuneCycles
-                      playerLocal.damage(0.025 * simulation.dmgScale)
+                        m.immuneCycle = m.cycle + m.collisionImmuneCycles
+                        m.damage(0.025 * simulation.dmgScale)
                     }
                     ctx.lineWidth = 3;
                     ctx.strokeStyle = "#000";
@@ -24846,7 +24846,7 @@ const level = {
                                 x: player.velocity.x * 0.95,
                                 y: player.velocity.y * 0.95
                             });
-                          playerLocal.damage(damage)
+                            m.damage(damage)
                         }
                         hits = Matter.Query.ray(body, v1, v2, 50)
                         for (let j = 0, len = Math.min(30, hits.length); j < len; j++) {
@@ -24939,7 +24939,7 @@ const level = {
                 if (!m.isCloak) vertexCollision(where, look, [player]);
                 if (best.who && (best.who === player) && m.immuneCycle < m.cycle) {
                     const dmg = 0.0011 * simulation.dmgScale;
-                  playerLocal.damage(dmg);
+                    m.damage(dmg);
                     simulation.drawList.push({ //add dmg to draw queue
                         x: best.x,
                         y: best.y,
@@ -27158,9 +27158,9 @@ const level = {
                     Matter.Body.setPosition(this, Vector.add(Vector.add(who.position, who.velocity), Vector.mult(orbit, radius)))
                     //damage player
                     if (Matter.Query.collides(this, [player]).length > 0 && !(m.isCloak && tech.isIntangible) && m.immuneCycle < m.cycle) {
-                      playerLocal.immuneCycle = m.cycle + m.collisionImmuneCycles; //player is immune to damage for 30 cycles
+                        m.immuneCycle = m.cycle + m.collisionImmuneCycles; //player is immune to damage for 30 cycles
                         const dmg = 0.03 * simulation.dmgScale
-                      playerLocal.damage(dmg);
+                        m.damage(dmg);
                         simulation.drawList.push({ //add dmg to draw queue
                             x: this.position.x,
                             y: this.position.y,
@@ -27364,8 +27364,8 @@ const level = {
                     vertexCollision(where, look, map);
                     if (!m.isCloak) vertexCollision(where, look, [playerBody, playerHead]);
                     if (best.who && (best.who === playerBody || best.who === playerHead) && m.immuneCycle < m.cycle) {
-                      playerLocal.immuneCycle = m.cycle + m.collisionImmuneCycles + 60; //player is immune to damage for an extra second
-                      playerLocal.damage(this.swordDamage);
+                        m.immuneCycle = m.cycle + m.collisionImmuneCycles + 60; //player is immune to damage for an extra second
+                        m.damage(this.swordDamage);
                         simulation.drawList.push({ //add dmg to draw queue
                             x: best.x,
                             y: best.y,
@@ -27518,8 +27518,8 @@ const level = {
                         this.swordRadiusGrowRate = 1 / this.swordRadiusGrowRateInitial //!!!! this retracts the sword if it hits the player
 
                         if (m.immuneCycle < m.cycle) {
-                          playerLocal.immuneCycle = m.cycle + m.collisionImmuneCycles + 60; //player is immune to damage for an extra second
-                          playerLocal.damage(this.swordDamage);
+                            m.immuneCycle = m.cycle + m.collisionImmuneCycles + 60; //player is immune to damage for an extra second
+                            m.damage(this.swordDamage);
                             simulation.drawList.push({ //add dmg to draw queue
                                 x: best.x,
                                 y: best.y,
@@ -27872,8 +27872,8 @@ const level = {
                     vertexCollision(where, look, map);
                     if (!m.isCloak) vertexCollision(where, look, [playerBody, playerHead]);
                     if (best.who && (best.who === playerBody || best.who === playerHead) && m.immuneCycle < m.cycle) {
-                      playerLocal.immuneCycle = m.cycle + m.collisionImmuneCycles + 60; //player is immune to damage for an extra second
-                      playerLocal.damage(this.swordDamage);
+                        m.immuneCycle = m.cycle + m.collisionImmuneCycles + 60; //player is immune to damage for an extra second
+                        m.damage(this.swordDamage);
                         simulation.drawList.push({ //add dmg to draw queue
                             x: best.x,
                             y: best.y,
@@ -27900,7 +27900,7 @@ const level = {
                     // ctx.lineDashOffset = 6*(simulation.cycle % 215);
                     if (this.distanceToPlayer3(x, y) < this.laserRange) {
                         if (m.immuneCycle < m.cycle) {
-                          playerLocal.damage(0.0003 * simulation.dmgScale);
+                            m.damage(0.0003 * simulation.dmgScale);
                             if (m.energy > 0.1) m.energy -= 0.003
                         }
                         ctx.beginPath();
@@ -28270,7 +28270,7 @@ const level = {
             if (Matter.Query.collides(wasd, [player]).length > 0 && !(m.isCloak && tech.isIntangible) && input.down && isDestroyed) {
                 wasd.force.x += Math.cos(m.angle) * 75;
                 Matter.Body.setVelocity(player, wasd.velocity)
-              playerLocal.Vx = player.velocity.x - wasd.velocity.x;
+                m.Vx = player.velocity.x - wasd.velocity.x;
             }
             for (let i = 0; i < mob.length; i++) {
                 if (Matter.Query.collides(wasd, [mob[i]]).length > 0 && !mob[i].isBoss && isDestroyed) {
@@ -28426,9 +28426,9 @@ const level = {
                     Matter.Body.setPosition(this, Vector.add(Vector.add(who.position, who.velocity), Vector.mult(orbit, radius)))
                     //damage player
                     if (Matter.Query.collides(this, [player]).length > 0 && !(m.isCloak && tech.isIntangible) && m.immuneCycle < m.cycle) {
-                      playerLocal.immuneCycle = m.cycle + m.collisionImmuneCycles; //player is immune to damage for 30 cycles
+                        m.immuneCycle = m.cycle + m.collisionImmuneCycles; //player is immune to damage for 30 cycles
                         const dmg = 0.03 * simulation.dmgScale
-                      playerLocal.damage(dmg);
+                        m.damage(dmg);
                         simulation.drawList.push({ //add dmg to draw queue
                             x: this.position.x,
                             y: this.position.y,
@@ -28632,8 +28632,8 @@ const level = {
                     vertexCollision(where, look, map);
                     if (!m.isCloak) vertexCollision(where, look, [playerBody, playerHead]);
                     if (best.who && (best.who === playerBody || best.who === playerHead) && m.immuneCycle < m.cycle) {
-                      playerLocal.immuneCycle = m.cycle + m.collisionImmuneCycles + 60; //player is immune to damage for an extra second
-                      playerLocal.damage(this.swordDamage);
+                        m.immuneCycle = m.cycle + m.collisionImmuneCycles + 60; //player is immune to damage for an extra second
+                        m.damage(this.swordDamage);
                         simulation.drawList.push({ //add dmg to draw queue
                             x: best.x,
                             y: best.y,
@@ -28786,8 +28786,8 @@ const level = {
                         this.swordRadiusGrowRate = 1 / this.swordRadiusGrowRateInitial //!!!! this retracts the sword if it hits the player
 
                         if (m.immuneCycle < m.cycle) {
-                          playerLocal.immuneCycle = m.cycle + m.collisionImmuneCycles + 60; //player is immune to damage for an extra second
-                          playerLocal.damage(this.swordDamage);
+                            m.immuneCycle = m.cycle + m.collisionImmuneCycles + 60; //player is immune to damage for an extra second
+                            m.damage(this.swordDamage);
                             simulation.drawList.push({ //add dmg to draw queue
                                 x: best.x,
                                 y: best.y,
@@ -29140,8 +29140,8 @@ const level = {
                     vertexCollision(where, look, map);
                     if (!m.isCloak) vertexCollision(where, look, [playerBody, playerHead]);
                     if (best.who && (best.who === playerBody || best.who === playerHead) && m.immuneCycle < m.cycle) {
-                      playerLocal.immuneCycle = m.cycle + m.collisionImmuneCycles + 60; //player is immune to damage for an extra second
-                      playerLocal.damage(this.swordDamage);
+                        m.immuneCycle = m.cycle + m.collisionImmuneCycles + 60; //player is immune to damage for an extra second
+                        m.damage(this.swordDamage);
                         simulation.drawList.push({ //add dmg to draw queue
                             x: best.x,
                             y: best.y,
@@ -29168,7 +29168,7 @@ const level = {
                     // ctx.lineDashOffset = 6*(simulation.cycle % 215);
                     if (this.distanceToPlayer3(x, y) < this.laserRange) {
                         if (m.immuneCycle < m.cycle) {
-                          playerLocal.damage(0.0003 * simulation.dmgScale);
+                            m.damage(0.0003 * simulation.dmgScale);
                             if (m.energy > 0.1) m.energy -= 0.003
                         }
                         ctx.beginPath();
@@ -29302,7 +29302,7 @@ const level = {
                         ctx.fillRect(this.min.x, this.min.y, this.width, this.height)
                         if (this.height > 0 && Matter.Query.region([player], this).length) {
                             player.force.y -= 0.015;
-                          playerLocal.energy = m.maxEnergy;
+                            m.energy = m.maxEnergy;
                         }
                         // if(this.raindrops.length < 300) { // too many (like 900) can cause a little bit of lag minus 5 ~ 10 fps, but it really just depends on your computer
                         //     this.raindrops.push(new Raindrop());
@@ -31111,7 +31111,7 @@ const level = {
     // ********************************************************************************************************
     walk() { //learn to walk
         if (localSettings.isHideHUD) localSettings.isHideHUD = false
-      playerLocal.addHealth(Infinity)
+        m.addHealth(Infinity)
         document.getElementById("health").style.display = "none" //hide your health bar
         document.getElementById("health-bg").style.display = "none"
         document.getElementById("defense-bar").style.display = "none"
@@ -31167,7 +31167,7 @@ const level = {
             if (localSettings.isAllowed) localStorage.setItem("localSettings", JSON.stringify(localSettings)); //update local storage
         }
 
-      playerLocal.addHealth(Infinity)
+        m.addHealth(Infinity)
         level.setPosToSpawn(75, -100); //normal spawn
         spawn.mapRect(25, -60, 100, 20); //small platform for player
         spawn.mapRect(0, -50, 150, 25); //stairs
@@ -31230,7 +31230,7 @@ const level = {
         spawn.mapRect(1600, -1200, 500, 850); //exit roof
     },
     jump() { //learn to jump
-      playerLocal.addHealth(Infinity)
+        m.addHealth(Infinity)
         level.setPosToSpawn(60, -50); //normal spawn
         spawn.mapRect(10, -10, 100, 20); //small platform for player
         level.exit.x = 1775;
@@ -31249,7 +31249,7 @@ const level = {
                 instruction++
                 level.trainingText(`<s>hold down <strong class="key-input-train">${input.key.up.replace('Key', '').replace('Digit', '')}</strong> longer to jump higher</s>`)
             }
-          playerLocal.health = 1 //can't die
+            m.health = 1 //can't die
             //exit room
             ctx.fillStyle = "#f2f2f2"
             ctx.fillRect(1600, -400, 400, 400)
@@ -31295,7 +31295,7 @@ const level = {
         spawn.mapRect(1000, -775, 150, 25);
     },
     hold() { //put block on button to open door
-      playerLocal.addHealth(Infinity)
+        m.addHealth(Infinity)
         level.setPosToSpawn(60, -50); //normal spawn
         spawn.mapRect(10, -10, 100, 20); //small platform for player
         level.exit.x = 1775;
@@ -31363,7 +31363,7 @@ const level = {
         spawn.mapRect(1600, -400, 50, 225); //exit room left upper wall
     },
     throw() { //throw a block on button to open door
-      playerLocal.addHealth(Infinity)
+        m.addHealth(Infinity)
         level.setPosToSpawn(60, -50); //normal spawn
         spawn.mapRect(10, -10, 100, 20); //small platform for player
         level.exit.x = 1775;
@@ -31440,7 +31440,7 @@ const level = {
         spawn.mapRect(1600, -400, 50, 225); //exit room left upper wall
     },
     throwAt() { //throw a block at mob to open door
-      playerLocal.addHealth(Infinity)
+        m.addHealth(Infinity)
         level.setPosToSpawn(60, -50); //normal spawn
         spawn.mapRect(10, -10, 100, 20); //small platform for player
         level.exit.x = 1775;
@@ -31602,7 +31602,7 @@ const level = {
         spawn.starter(1400, -400, 44)
     },
     deflect() { //learn to jump
-      playerLocal.addHealth(Infinity)
+        m.addHealth(Infinity)
         level.setPosToSpawn(60, -50); //normal spawn
         spawn.mapRect(10, -10, 100, 20); //small platform for player
         level.exit.x = 1775;
@@ -31624,7 +31624,7 @@ const level = {
             }
             //teleport to start if hit
             if (m.immuneCycle > m.cycle) {
-              playerLocal.energy = m.maxEnergy
+                m.energy = m.maxEnergy
                 Matter.Body.setPosition(player, {
                     x: 60,
                     y: -50
@@ -31681,9 +31681,9 @@ const level = {
         }
     },
     heal() { //learn to heal
-      playerLocal.addHealth(Infinity)
-      playerLocal.health = 0;
-      playerLocal.addHealth(0.25)
+        m.addHealth(Infinity)
+        m.health = 0;
+        m.addHealth(0.25)
         document.getElementById("health").style.display = "inline" //show your health bar
         document.getElementById("health-bg").style.display = "inline"
         if (!localSettings.isHideHUD) {
@@ -32534,7 +32534,7 @@ const level = {
     },
     diamagnetism() {
         if (localSettings.isHideHUD) localSettings.isHideHUD = false
-      playerLocal.addHealth(Infinity)
+        m.addHealth(Infinity)
         document.getElementById("health").style.display = "none" //hide your health bar
         document.getElementById("health-bg").style.display = "none"
         document.getElementById("defense-bar").style.display = "none"
@@ -32542,8 +32542,8 @@ const level = {
         const futureGuns = ["harpoon", "shotgun", "nail gun", "super balls", "wave", "foam", "laser"];
         const futureGun = Math.floor(Math.random() * futureGuns.length)
         b.giveGuns(futureGuns[futureGun], Infinity)
-      playerLocal.setField(2)
-      playerLocal.fieldRegen = 0;
+        m.setField(2)
+        m.fieldRegen = 0;
         level.trainingText(`<strong>diamagnetism</strong> by <span class='color-var'>Richard0820</span><br><strong>Don't get hit.</strong><br> Find the portal to the exit.`)
         const dodge = [];
         const button = level.button(350 - 63, -300)
@@ -32600,7 +32600,7 @@ const level = {
             forceThree.query()
             if (input.field && player.position.x < 775 && player.position.x > -50) {
                 if (m.energy > 0.02) {
-                  playerLocal.energy -= 0.01
+                    m.energy -= 0.01
                 } else {
                     input.field = false
                 }
@@ -32626,7 +32626,7 @@ const level = {
             ctx.fillRect(1175, -6650, 2400, 2375);
             ctx.drawImage(image, 1175 + 1200 - 250, -6650 + (2375 / 2) - 250, 500, 500)
             if (m.immuneCycle > m.cycle) {
-              playerLocal.energy = m.maxEnergy
+                m.energy = m.maxEnergy
                 Matter.Body.setPosition(player, {
                     x: respawnPoints.x,
                     y: respawnPoints.y
@@ -32775,7 +32775,7 @@ const level = {
                         if (this.height > 0 && Matter.Query.region([player], this).length) {
                             Matter.Body.setVelocity(player, { x: 0, y: 0 })
                             Matter.Body.setPosition(player, { x: this.move.x, y: this.move.y })
-                          playerLocal.energy = m.maxEnergy;
+                            m.energy = m.maxEnergy;
                         }
                     }
                 },
@@ -32795,7 +32795,7 @@ const level = {
                         ctx.fillRect(this.min.x, this.min.y, this.width, this.height)
                         if (this.height > 0 && Matter.Query.region([player], this).length && input.field) {
                             player.force.y -= 0.015;
-                          playerLocal.energy = m.maxEnergy;
+                            m.energy = m.maxEnergy;
                         }
                         ctx.fillStyle = `rgba(0, 250, 250)`
                         ctx.fillRect(this.min.x + this.width * Math.random(), this.min.y, 5, this.height)
@@ -32816,7 +32816,7 @@ const level = {
                         ctx.fillStyle = `rgba(0, 250, 0, 0.11)`
                         ctx.fillRect(this.min.x, this.min.y, this.width, this.height)
                         if (this.height > 0 && Matter.Query.region([player], this).length) {
-                          playerLocal.energy = m.maxEnergy;
+                            m.energy = m.maxEnergy;
                             respawnPoints.x = this.min.x + (this.width / 2);
                             respawnPoints.y = this.min.y + (this.height / 2);
                         }
@@ -32843,7 +32843,7 @@ const level = {
                     if (player.isInPortal === this) player.isInPortal = null
                 } else if (player.isInPortal !== this) { //touching player
                     if (m.buttonCD_jump === m.cycle) player.force.y = 0 // undo a jump right before entering the portal
-                  playerLocal.buttonCD_jump = 0 //disable short jumps when letting go of jump key
+                    m.buttonCD_jump = 0 //disable short jumps when letting go of jump key
                     player.isInPortal = this.portalPair
                     if (this.portalPair.angle % (Math.PI / 2)) { //if left, right up or down
                         // if (m.immuneCycle < m.cycle + m.collisionImmuneCycles) m.immuneCycle = m.cycle + m.collisionImmuneCycles; //player is immune to damage for 30 cycles
@@ -32992,7 +32992,7 @@ const level = {
         }
     },
     trainingTemplate() { //learn to crouch
-      playerLocal.addHealth(Infinity)
+        m.addHealth(Infinity)
         document.getElementById("health").style.display = "none" //hide your health bar
         document.getElementById("health-bg").style.display = "none"
         document.getElementById("defense-bar").style.display = "none"

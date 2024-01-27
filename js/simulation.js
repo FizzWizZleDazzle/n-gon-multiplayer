@@ -8,12 +8,12 @@ const simulation = {
         simulation.wipe();
         simulation.textLog();
         if (m.onGround) {
-          playerLocal.groundControl()
+            m.groundControl()
         } else {
-          playerLocal.airControl()
+            m.airControl()
         }
-      playerLocal.move();
-      playerLocal.look();
+        m.move();
+        m.look();
         simulation.camera();
         level.custom();
         powerUps.do();
@@ -22,8 +22,8 @@ const simulation = {
         simulation.draw.body();
         if (!m.isBodiesAsleep) mobs.loop();
         mobs.healthBar();
-      playerLocal.draw();
-      playerLocal.hold();
+        m.draw();
+        m.hold();
         level.customTopLayer();
         simulation.draw.drawMapPath();
         b.fire();
@@ -41,20 +41,20 @@ const simulation = {
         simulation.wipe();
         simulation.textLog();
         if (m.onGround) {
-          playerLocal.groundControl()
+            m.groundControl()
         } else {
-          playerLocal.airControl()
+            m.airControl()
         }
-      playerLocal.move();
-      playerLocal.look();
+        m.move();
+        m.look();
         simulation.camera();
         level.custom();
-      playerLocal.draw();
-      playerLocal.hold();
+        m.draw();
+        m.hold();
         level.customTopLayer();
         simulation.draw.wireFrame();
         if (input.fire && m.fireCDcycle < m.cycle) {
-          playerLocal.fireCDcycle = m.cycle + 15; //fire cooldown       
+            m.fireCDcycle = m.cycle + 15; //fire cooldown       
             for (let i = 0, len = mob.length; i < len; i++) {
                 if (Vector.magnitudeSquared(Vector.sub(mob[i].position, simulation.mouseInGame)) < mob[i].radius * mob[i].radius) {
                     console.log(mob[i])
@@ -75,19 +75,19 @@ const simulation = {
         simulation.isTimeSkipping = true;
         for (let i = 0; i < cycles; i++) {
             simulation.cycle++;
-          playerLocal.cycle++;
+            m.cycle++;
             simulation.gravity();
             Engine.update(engine, simulation.delta);
             if (m.onGround) {
-              playerLocal.groundControl()
+                m.groundControl()
             } else {
-              playerLocal.airControl()
+                m.airControl()
             }
-          playerLocal.move();
+            m.move();
             level.custom();
             mobs.loop();
-          playerLocal.walk_cycle += m.flipLegs * m.Vx;
-          playerLocal.hold();
+            m.walk_cycle += m.flipLegs * m.Vx;
+            m.hold();
             level.customTopLayer();
             b.fire();
             b.bulletRemove();
@@ -133,12 +133,12 @@ const simulation = {
     //     simulation.wipe();
     //     simulation.textLog();
     //     if (m.onGround) {
-    //       playerLocal.groundControl()
+    //         m.groundControl()
     //     } else {
-    //       playerLocal.airControl()
+    //         m.airControl()
     //     }
-    //   playerLocal.move();
-    //   playerLocal.look();
+    //     m.move();
+    //     m.look();
     //     simulation.camera();
     //     level.custom();
     //     powerUps.do();
@@ -149,8 +149,8 @@ const simulation = {
     //         // mobs.loop();
     //     }
     //     mobs.healthBar();
-    //   playerLocal.draw();
-    //   playerLocal.hold();
+    //     m.draw();
+    //     m.hold();
     //     // v.draw(); //working on visibility work in progress
     //     level.customTopLayer();
     //     simulation.draw.drawMapPath();
@@ -556,11 +556,11 @@ const simulation = {
         Matter.Body.setPosition(player, { x: where.x, y: where.y });
         const change = { x: before.x - player.position.x, y: before.y - player.position.y }
         // translate camera to preserve illusion to endless fall
-      playerLocal.transX += change.x
-      playerLocal.transY += change.y
+        m.transX += change.x
+        m.transY += change.y
         simulation.mouseInGame.x = (simulation.mouse.x - canvas.width2) / simulation.zoom * simulation.edgeZoomOutSmooth + canvas.width2 - m.transX;
         simulation.mouseInGame.y = (simulation.mouse.y - canvas.height2) / simulation.zoom * simulation.edgeZoomOutSmooth + canvas.height2 - m.transY;
-      playerLocal.angle = Math.atan2(simulation.mouseInGame.y - m.pos.y, simulation.mouseInGame.x - m.pos.x);
+        m.angle = Math.atan2(simulation.mouseInGame.y - m.pos.y, simulation.mouseInGame.x - m.pos.x);
 
         //is there a reason to update m.pos here?
         // m.pos.x = player.position.x;
@@ -579,13 +579,13 @@ const simulation = {
     },
     setupCamera() { //makes the camera not scroll after changing locations
         // //only works if velocity is zero
-      playerLocal.pos.x = player.position.x;
-      playerLocal.pos.y = playerBody.position.y - m.yOff;
+        m.pos.x = player.position.x;
+        m.pos.y = playerBody.position.y - m.yOff;
         const scale = 0.8;
-      playerLocal.transSmoothX = canvas.width2 - m.pos.x - (simulation.mouse.x - canvas.width2) * scale;
-      playerLocal.transSmoothY = canvas.height2 - m.pos.y - (simulation.mouse.y - canvas.height2) * scale;
-      playerLocal.transX += (m.transSmoothX - m.transX);
-      playerLocal.transY += (m.transSmoothY - m.transY);
+        m.transSmoothX = canvas.width2 - m.pos.x - (simulation.mouse.x - canvas.width2) * scale;
+        m.transSmoothY = canvas.height2 - m.pos.y - (simulation.mouse.y - canvas.height2) * scale;
+        m.transX += (m.transSmoothX - m.transX);
+        m.transY += (m.transSmoothY - m.transY);
     },
     edgeZoomOutSmooth: 1,
     camera() {
@@ -771,9 +771,9 @@ const simulation = {
         })
         // ctx.shadowColor = '#000';
         if (!m.isShipMode) {
-          playerLocal.resetSkin() //set the play draw to normal, undoing some junk tech
-          playerLocal.spawn(); //spawns the player
-          playerLocal.look = m.lookDefault
+            m.resetSkin() //set the play draw to normal, undoing some junk tech
+            m.spawn(); //spawns the player
+            m.look = m.lookDefault
         } else {
             Composite.add(engine.world, [player])
         }
@@ -816,7 +816,7 @@ const simulation = {
         powerUps.research.count = 0;
         powerUps.boost.endCycle = 0
         powerUps.isFieldSpawned = false
-      playerLocal.setFillColors();
+        m.setFillColors();
         // m.maxHealth = 1
         // m.maxEnergy = 1
         // m.energy = 1
@@ -824,7 +824,7 @@ const simulation = {
         simulation.wipe = function () { //set wipe to normal
             ctx.clearRect(0, 0, canvas.width, canvas.height);
         }
-      playerLocal.hole.isOn = false
+        m.hole.isOn = false
         simulation.paused = false;
         // simulation.cycle = 0
         // m.cycle = 0
@@ -857,19 +857,19 @@ const simulation = {
 
         // document.getElementById("health").style.display = "inline"
         // document.getElementById("health-bg").style.display = "inline"
-      playerLocal.alive = true;
-      playerLocal.onGround = false
-      playerLocal.lastOnGroundCycle = 0
-      playerLocal.health = 0;
-      playerLocal.addHealth(0.25)
-      playerLocal.drop();
-      playerLocal.holdingTarget = null
+        m.alive = true;
+        m.onGround = false
+        m.lastOnGroundCycle = 0
+        m.health = 0;
+        m.addHealth(0.25)
+        m.drop();
+        m.holdingTarget = null
 
         //set to default field
         tech.healMaxEnergyBonus = 0
         // m.setMaxEnergy();
-      playerLocal.energy = 0
-      playerLocal.immuneCycle = 0;
+        m.energy = 0
+        m.immuneCycle = 0;
         // simulation.makeTextLog(`${simulation.SVGrightMouse}<strong style='font-size:30px;'> ${m.fieldUpgrades[m.fieldMode].name}</strong><br><span class='faded'></span><br>${m.fieldUpgrades[m.fieldMode].description}`, 600);
         // simulation.makeTextLog(`
         // input.key.up <span class='color-symbol'>=</span> ["<span class='color-text'>${input.key.up}</span>", "<span class='color-text'>ArrowUp</span>"]
@@ -881,8 +881,8 @@ const simulation = {
         // <br>input.key.field <span class='color-symbol'>=</span> ["<span class='color-text'>${input.key.field}</span>", "<span class='color-text'>right mouse</span>"]
         // <br><span class='color-var'>m</span>.field.description <span class='color-symbol'>=</span> "<span class='color-text'>${m.fieldUpgrades[m.fieldMode].description}</span>"
         // `, 800);
-      playerLocal.coupling = 0
-      playerLocal.setField(0) //this calls m.couplingChange(), which sets max health and max energy
+        m.coupling = 0
+        m.setField(0) //this calls m.couplingChange(), which sets max health and max energy
         // m.energy = 0;
         //exit testing
         if (simulation.testing) {
@@ -905,12 +905,12 @@ const simulation = {
                         const defense = m.defense()             //update defense bar
                         if (m.lastCalculatedDefense !== defense) {
                             document.getElementById("defense-bar").style.width = Math.floor(300 * m.maxHealth * (1 - defense)) + "px";
-                          playerLocal.lastCalculatedDefense = defense
+                            m.lastCalculatedDefense = defense
                         }
                         const damage = tech.damageFromTech()             //update damage bar
                         if (m.lastCalculatedDamage !== damage) {
                             document.getElementById("damage-bar").style.height = Math.floor((Math.atan(0.25 * damage - 0.25) + 0.25) * 0.53 * canvas.height) + "px";
-                          playerLocal.lastCalculatedDamage = damage
+                            m.lastCalculatedDamage = damage
                         }
                     }
                 },
@@ -921,14 +921,14 @@ const simulation = {
                 if (!(m.cycle % 60)) { //once a second
                     //energy overfill 
                     if (m.energy > m.maxEnergy) {
-                      playerLocal.energy = m.maxEnergy + (m.energy - m.maxEnergy) * tech.overfillDrain //every second energy above max energy loses 25%
+                        m.energy = m.maxEnergy + (m.energy - m.maxEnergy) * tech.overfillDrain //every second energy above max energy loses 25%
                         if (m.energy > 1000000) m.energy = 1000000
                     }
                     if (tech.isFlipFlopEnergy && m.immuneCycle < m.cycle) {
                         if (tech.isFlipFlopOn) {
                             if (m.immuneCycle < m.cycle) m.energy += 0.2;
                         } else {
-                          playerLocal.energy -= 0.01;
+                            m.energy -= 0.01;
                             if (m.energy < 0) m.energy = 0
                         }
                     }
@@ -960,11 +960,11 @@ const simulation = {
 
                             const change = { x: before.x - player.position.x, y: before.y - player.position.y }
                             // translate camera smoothly to preserve illusion to endless fall
-                          playerLocal.transX += change.x
-                          playerLocal.transY += change.y
+                            m.transX += change.x
+                            m.transY += change.y
                             simulation.mouseInGame.x = (simulation.mouse.x - canvas.width2) / simulation.zoom * simulation.edgeZoomOutSmooth + canvas.width2 - m.transX;
                             simulation.mouseInGame.y = (simulation.mouse.y - canvas.height2) / simulation.zoom * simulation.edgeZoomOutSmooth + canvas.height2 - m.transY;
-                          playerLocal.angle = Math.atan2(simulation.mouseInGame.y - m.pos.y, simulation.mouseInGame.x - m.pos.x);
+                            m.angle = Math.atan2(simulation.mouseInGame.y - m.pos.y, simulation.mouseInGame.x - m.pos.x);
                             // move bots
                             for (let i = 0; i < bullet.length; i++) {
                                 if (bullet[i].botType) {
@@ -995,7 +995,7 @@ const simulation = {
                     if (isNaN(player.position.x)) m.death();
                     if (m.lastKillCycle + 300 > m.cycle) { //effects active for 5 seconds after killing a mob
                         if (tech.isEnergyRecovery && m.immuneCycle < m.cycle) {
-                          playerLocal.energy += m.maxEnergy * 0.05
+                            m.energy += m.maxEnergy * 0.05
                             simulation.drawList.push({ //add dmg to draw queue
                                 x: m.pos.x,
                                 y: m.pos.y - 45,
@@ -1007,7 +1007,7 @@ const simulation = {
                         if (tech.isHealthRecovery) {
                             if (tech.isEnergyHealth) {
                                 if (m.immuneCycle < m.cycle) {
-                                  playerLocal.energy += m.maxEnergy * 0.005
+                                    m.energy += m.maxEnergy * 0.005
                                     simulation.drawList.push({ //add dmg to draw queue
                                         x: m.pos.x,
                                         y: m.pos.y,
@@ -1018,7 +1018,7 @@ const simulation = {
                                 }
                             } else {
                                 const heal = 0.005 * m.maxHealth
-                              playerLocal.addHealth(heal)
+                                m.addHealth(heal)
                                 simulation.drawList.push({ //add dmg to draw queue
                                     x: m.pos.x,
                                     y: m.pos.y,
@@ -1055,10 +1055,10 @@ const simulation = {
 
                         if (tech.isZeno) {
                             if (tech.isEnergyHealth) {
-                              playerLocal.energy *= 0.95
+                                m.energy *= 0.95
                             } else {
-                              playerLocal.health *= 0.95 //remove 5%
-                              playerLocal.displayHealth();
+                                m.health *= 0.95 //remove 5%
+                                m.displayHealth();
                             }
 
                         }
@@ -1138,9 +1138,9 @@ const simulation = {
             if (tech.isMutualism && !tech.isEnergyHealth) {
                 for (let i = 0; i < bullet.length; i++) {
                     if (bullet[i].isMutualismActive) {
-                      playerLocal.health += 0.01 + 0.01 * ((bullet[i].isSpore || bullet[i].isFlea) ? 0 : 1)
+                        m.health += 0.01 + 0.01 * ((bullet[i].isSpore || bullet[i].isFlea) ? 0 : 1)
                         if (m.health > m.maxHealth) m.health = m.maxHealth;
-                      playerLocal.displayHealth();
+                        m.displayHealth();
                     }
                 }
             }
@@ -1175,9 +1175,9 @@ const simulation = {
             bullet: "#000"
         }
         simulation.draw.drawMapPath = simulation.draw.drawMapPathDefault
-      playerLocal.fireCDcycle = 0
-      playerLocal.drop();
-      playerLocal.hole.isOn = false;
+        m.fireCDcycle = 0
+        m.drop();
+        m.hole.isOn = false;
         simulation.drawList = [];
 
         if (tech.isHealAttract && m.alive) { //send health power ups to the next level
@@ -1324,13 +1324,13 @@ const simulation = {
                 frictionStatic: holdTarget.frictionStatic
             });
             Matter.Body.setPosition(body[len], m.pos);
-          playerLocal.isHolding = true
-          playerLocal.holdingTarget = body[len];
-          playerLocal.holdingTarget.collisionFilter.category = 0;
-          playerLocal.holdingTarget.collisionFilter.mask = 0;
-          playerLocal.definePlayerMass(m.defaultMass + m.holdingTarget.mass * m.holdingMassScale)
+            m.isHolding = true
+            m.holdingTarget = body[len];
+            m.holdingTarget.collisionFilter.category = 0;
+            m.holdingTarget.collisionFilter.mask = 0;
+            m.definePlayerMass(m.defaultMass + m.holdingTarget.mass * m.holdingMassScale)
             Composite.add(engine.world, m.holdingTarget); //add to world
-          playerLocal.holdingTarget.classType = "body"
+            m.holdingTarget.classType = "body"
         }
         //set fps back to default
         simulation.fpsCap = simulation.fpsCapDefault

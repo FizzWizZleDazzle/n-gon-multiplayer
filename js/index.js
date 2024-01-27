@@ -118,8 +118,8 @@ window.addEventListener('load', () => {
             if (property === "field") {
                 let found = false
                 let index
-                for (let i = 0; i <playerLocal.fieldUpgrades.length; i++) {
-                    if (set[property] ===playerLocal.fieldUpgrades[i].name) {
+                for (let i = 0; i < m.fieldUpgrades.length; i++) {
+                    if (set[property] === m.fieldUpgrades[i].name) {
                         index = i;
                         found = true;
                         break;
@@ -156,7 +156,7 @@ window.addEventListener('load', () => {
             if (property === "molMode") {
                 simulation.molecularMode = Number(set[property])
                 const i = 4 //update experiment text
-               playerLocal.fieldUpgrades[i].description =playerLocal.fieldUpgrades[i].setDescription()
+                m.fieldUpgrades[i].description = m.fieldUpgrades[i].setDescription()
                 document.getElementById(`field-${i}`).innerHTML = `<div class="card-text">
                 <div class="grid-title"><div class="circle-grid field"></div> &nbsp; ${build.nameLink(m.fieldUpgrades[i].name)}</div>
                 ${m.fieldUpgrades[i].description}</div>`
@@ -281,7 +281,7 @@ const build = {
                 // ctx.putImageData(imgData, 0, 1); //pixels fall because of the 1 in third parameter
                 ctx.putImageData(imgData, 0, 0);
             }
-            if (simulation.paused &&playerLocal.alive) requestAnimationFrame(loop);
+            if (simulation.paused && m.alive) requestAnimationFrame(loop);
         }
         requestAnimationFrame(loop);
     },
@@ -318,15 +318,15 @@ const build = {
             simulation.ephemera.push({
                 name: "dmgDefBars", count: 0, do() {
                     if (!(m.cycle % 15)) { //4 times a second
-                        const defense =playerLocal.defense()             //update defense bar
+                        const defense = m.defense()             //update defense bar
                         if (m.lastCalculatedDefense !== defense) {
-                            document.getElementById("defense-bar").style.width = Math.floor(300 *playerLocal.maxHealth * (1 - defense)) + "px";
-                           playerLocal.lastCalculatedDefense = defense
+                            document.getElementById("defense-bar").style.width = Math.floor(300 * m.maxHealth * (1 - defense)) + "px";
+                            m.lastCalculatedDefense = defense
                         }
                         const damage = tech.damageFromTech()             //update damage bar
                         if (m.lastCalculatedDamage !== damage) {
                             document.getElementById("damage-bar").style.height = Math.floor((Math.atan(0.25 * damage - 0.25) + 0.25) * 0.53 * canvas.height) + "px";
-                           playerLocal.lastCalculatedDamage = damage
+                            m.lastCalculatedDamage = damage
                         }
                     }
                 },
@@ -350,7 +350,7 @@ const build = {
 
         //show in game console
         // document.getElementById("text-log").style.display = "inline"
-        simulation.lastLogTime =playerLocal.cycle //hide in game console
+        simulation.lastLogTime = m.cycle //hide in game console
 
     },
     generatePauseLeft() {
@@ -391,10 +391,10 @@ const build = {
 <br>
 
 <br><strong class='color-d'>damage</strong>: ${((tech.damageFromTech())).toPrecision(4)} &nbsp; &nbsp; difficulty: ${((m.dmgScale)).toPrecision(4)}
-<br><strong class='color-defense'>defense</strong>: ${(1 -playerLocal.defense()).toPrecision(5)} &nbsp; &nbsp; difficulty: ${(1 / simulation.dmgScale).toPrecision(4)}
+<br><strong class='color-defense'>defense</strong>: ${(1 - m.defense()).toPrecision(5)} &nbsp; &nbsp; difficulty: ${(1 / simulation.dmgScale).toPrecision(4)}
 <br><strong><em>fire rate</em></strong>: ${((1 - b.fireCDscale) * 100).toFixed(b.fireCDscale < 0.1 ? 2 : 0)}%
 ${tech.duplicationChance() ? `<br><strong class='color-dup'>duplication</strong>: ${(tech.duplicationChance() * 100).toFixed(0)}%` : ""}
-${m.coupling ? `<br><span style = 'font-size:90%;'>` +playerLocal.couplingDescription(m.coupling) + `</span> from ${(m.coupling).toFixed(0)} ${powerUps.orb.coupling(1)}` : ""}
+${m.coupling ? `<br><span style = 'font-size:90%;'>` + m.couplingDescription(m.coupling) + `</span> from ${(m.coupling).toFixed(0)} ${powerUps.orb.coupling(1)}` : ""}
 ${botText}
 <br>
 <br><strong class='color-h'>health</strong>: (${(m.health * 100).toFixed(0)} / ${(m.maxHealth * 100).toFixed(0)})
@@ -414,13 +414,13 @@ ${simulation.isCheating ? "<br><br><em>lore disabled</em>" : ""}
 </span></div>`;
         // deaths: ${mobs.mobDeaths} &nbsp;
         if (tech.isPauseSwitchField && !simulation.isChoosing) {
-            const style = localSettings.isHideImages ? `style="height:auto;"` : `style="background-image: url('img/field/${m.fieldUpgrades[m.fieldMode].name}${m.fieldMode === 0 ?playerLocal.fieldUpgrades[0].imageNumber : ""}.webp');"`
+            const style = localSettings.isHideImages ? `style="height:auto;"` : `style="background-image: url('img/field/${m.fieldUpgrades[m.fieldMode].name}${m.fieldMode === 0 ? m.fieldUpgrades[0].imageNumber : ""}.webp');"`
             text += `<div class="pause-grid-module card-background" id ="pause-field" ${style} >
                            <div class="card-text" style = "animation: fieldColorCycle 1s linear infinite alternate;">
                            <div class="grid-title"><div class="circle-grid field"></div> &nbsp; ${build.nameLink(m.fieldUpgrades[m.fieldMode].name)}</div>
                            ${m.fieldUpgrades[m.fieldMode].description}</div> </div>`
         } else {
-            const style = localSettings.isHideImages ? `style="height:auto;"` : `style="background-image: url('img/field/${m.fieldUpgrades[m.fieldMode].name}${m.fieldMode === 0 ?playerLocal.fieldUpgrades[0].imageNumber : ""}.webp');"`
+            const style = localSettings.isHideImages ? `style="height:auto;"` : `style="background-image: url('img/field/${m.fieldUpgrades[m.fieldMode].name}${m.fieldMode === 0 ? m.fieldUpgrades[0].imageNumber : ""}.webp');"`
             text += `<div class="pause-grid-module card-background" id ="pause-field" ${style} >
                            <div class="card-text">
                            <div class="grid-title"><div class="circle-grid field"></div> &nbsp; ${build.nameLink(m.fieldUpgrades[m.fieldMode].name)}</div>
@@ -689,15 +689,15 @@ ${simulation.isCheating ? "<br><br><em>lore disabled</em>" : ""}
             }
         } else if (type === "field") {
             if (m.fieldMode !== index) {
-                document.getElementById("field-" +playerLocal.fieldMode).classList.remove("build-field-selected");
-               playerLocal.setField(index)
+                document.getElementById("field-" + m.fieldMode).classList.remove("build-field-selected");
+                m.setField(index)
                 document.getElementById("field-" + index).classList.add("build-field-selected");
                 document.getElementById("tech-150").focus();
             } else if (m.fieldMode === 4) {
                 const i = 4 //update experiment text
                 simulation.molecularMode++
                 if (simulation.molecularMode > i - 1) simulation.molecularMode = 0
-               playerLocal.fieldUpgrades[i].description =playerLocal.fieldUpgrades[i].setDescription()
+                m.fieldUpgrades[i].description = m.fieldUpgrades[i].setDescription()
                 // document.getElementById(`field-${i}`).innerHTML = `<div class="grid-title"><div class="circle-grid field"></div> &nbsp; ${build.nameLink(m.fieldUpgrades[i].name)}</div> ${m.fieldUpgrades[i].description}`
 
                 document.getElementById(`field-${i}`).innerHTML = `<div class="card-text">
@@ -823,8 +823,8 @@ ${simulation.isCheating ? "<br><br><em>lore disabled</em>" : ""}
 </div>
 </div>`
         const hideStyle = `style="height:auto; border: none; background-color: transparent;"`
-        for (let i = 0, len =playerLocal.fieldUpgrades.length; i < len; i++) {
-            const style = localSettings.isHideImages ? hideStyle : `style="background-image: url('img/field/${m.fieldUpgrades[i].name}${i === 0 ?playerLocal.fieldUpgrades[0].imageNumber : ""}.webp');"`
+        for (let i = 0, len = m.fieldUpgrades.length; i < len; i++) {
+            const style = localSettings.isHideImages ? hideStyle : `style="background-image: url('img/field/${m.fieldUpgrades[i].name}${i === 0 ? m.fieldUpgrades[0].imageNumber : ""}.webp');"`
             text += `<div id="field-${i}" class="experiment-grid-module card-background ${m.fieldMode === i ? "build-field-selected" : ""}" onclick="build.choosePowerUp(${i},'field')" ${style} >
                     <div class="card-text">
                     <div class="grid-title"><div class="circle-grid field"></div> &nbsp; ${build.nameLink(m.fieldUpgrades[i].name)}</div>
@@ -903,7 +903,7 @@ ${simulation.isCheating ? "<br><br><em>lore disabled</em>" : ""}
         b.activeGun = null;
         b.inventoryGun = 0;
         simulation.makeGunHUD();
-       playerLocal.resetSkin()
+        m.resetSkin()
         tech.setupAllTech();
         build.populateGrid();
         document.getElementById("field-0").classList.add("build-field-selected");
@@ -931,7 +931,7 @@ ${simulation.isCheating ? "<br><br><em>lore disabled</em>" : ""}
         url += `&molMode=${encodeURIComponent(simulation.molecularMode)}`
         // if (property === "molMode") {
         //     simulation.molecularMode = Number(set[property])
-        //    playerLocal.fieldUpgrades[i].description =playerLocal.fieldUpgrades[i].setDescription()
+        //     m.fieldUpgrades[i].description = m.fieldUpgrades[i].setDescription()
         //     document.getElementById(`field-${i}`).innerHTML = `<div class="grid-title"><div class="circle-grid field"></div> &nbsp; ${build.nameLink(m.fieldUpgrades[i].name)}</div> ${m.fieldUpgrades[i].description}`
         // }
 
@@ -979,7 +979,7 @@ ${simulation.isCheating ? "<br><br><em>lore disabled</em>" : ""}
             for (let i = 0, len = tech.tech.length; i < len; i++) {
                 if (tech.tech[i].count > 0 && !tech.tech[i].isLore) simulation.isCheating = true;
             }
-            if (b.inventory.length !== 0 ||playerLocal.fieldMode !== 0) simulation.isCheating = true;
+            if (b.inventory.length !== 0 || m.fieldMode !== 0) simulation.isCheating = true;
         }
         if (simulation.isCheating) { //if you are cheating remove any lore you might have gotten
             lore.techCount = 0;
@@ -1022,7 +1022,7 @@ document.getElementById("experiment-button").addEventListener("click", () => { /
     // let inventory = [];
     // let techList = [];
     // if (!simulation.firstRun) {
-    //     field =playerLocal.fieldMode
+    //     field = m.fieldMode
     //     inventory = [...b.inventory]
     //     for (let i = 0; i < tech.tech.length; i++) {
     //         techList.push(tech.tech[i].count)
@@ -1248,7 +1248,7 @@ window.addEventListener("keydown", function (event) {
             simulation.previousGun();
             break
         case input.key.pause:
-            if (!simulation.isChoosing && input.isPauseKeyReady &&playerLocal.alive) {
+            if (!simulation.isChoosing && input.isPauseKeyReady && m.alive) {
                 input.isPauseKeyReady = false
                 setTimeout(function () {
                     input.isPauseKeyReady = true
@@ -1266,18 +1266,18 @@ window.addEventListener("keydown", function (event) {
 
                     if (tech.isPauseSwitchField || simulation.testing) {
                         document.getElementById("pause-field").addEventListener("click", () => {
-                            const energy =playerLocal.energy //save current energy
+                            const energy = m.energy //save current energy
                             if (m.fieldMode === 4 && simulation.molecularMode < 3) {
                                 simulation.molecularMode++
-                               playerLocal.fieldUpgrades[4].description =playerLocal.fieldUpgrades[4].setDescription()
+                                m.fieldUpgrades[4].description = m.fieldUpgrades[4].setDescription()
                             } else {
-                               playerLocal.setField((m.fieldMode ===playerLocal.fieldUpgrades.length - 1) ? 1 :playerLocal.fieldMode + 1) //cycle to next field, skip field emitter
+                                m.setField((m.fieldMode === m.fieldUpgrades.length - 1) ? 1 : m.fieldMode + 1) //cycle to next field, skip field emitter
                                 if (m.fieldMode === 4) {
                                     simulation.molecularMode = 0
-                                   playerLocal.fieldUpgrades[4].description =playerLocal.fieldUpgrades[4].setDescription()
+                                    m.fieldUpgrades[4].description = m.fieldUpgrades[4].setDescription()
                                 }
                             }
-                           playerLocal.energy = energy //return to current energy
+                            m.energy = energy //return to current energy
                             // document.getElementById("pause-field").innerHTML = `<div class="grid-title"><div class="circle-grid field"></div> &nbsp; ${m.fieldUpgrades[m.fieldMode].name}</div> ${m.fieldUpgrades[m.fieldMode].description}`
                             document.getElementById("pause-field").style.backgroundImage = `url('img/field/${m.fieldUpgrades[m.fieldMode].name}${m.fieldMode === 0 ? Math.floor(Math.random() * 10) : ""}.webp')`
                             document.getElementById("pause-field").innerHTML = `
@@ -1406,7 +1406,7 @@ window.addEventListener("keydown", function (event) {
     }
 
     if (simulation.testing) {
-        if (event.key === "X")playerLocal.death(); //only uppercase
+        if (event.key === "X") m.death(); //only uppercase
         switch (event.key.toLowerCase()) {
             case "o":
                 // simulation.isAutoZoom = false;
@@ -1449,27 +1449,27 @@ window.addEventListener("keydown", function (event) {
                 spawn.randomLevelBoss(simulation.mouseInGame.x, simulation.mouseInGame.y);
                 break
             case "f":
-                const mode = (m.fieldMode ===playerLocal.fieldUpgrades.length - 1) ? 0 :playerLocal.fieldMode + 1
-               playerLocal.setField(mode)
+                const mode = (m.fieldMode === m.fieldUpgrades.length - 1) ? 0 : m.fieldMode + 1
+                m.setField(mode)
                 break
             case "g":
                 b.giveGuns("all", 1000)
                 break
             case "h":
-                //playerLocal.health = Infinity
+                // m.health = Infinity
                 if (m.immuneCycle === Infinity) {
-                   playerLocal.immuneCycle = 0 //you can't take damage
+                    m.immuneCycle = 0 //you can't take damage
                 } else {
-                   playerLocal.immuneCycle = Infinity //you can't take damage
+                    m.immuneCycle = Infinity //you can't take damage
                 }
 
-                //playerLocal.energy = Infinity
+                // m.energy = Infinity
                 // document.getElementById("health").style.display = "none"
                 // document.getElementById("health-bg").style.display = "none"
                 break
             case "n":
-               playerLocal.addHealth(Infinity)
-               playerLocal.energy =playerLocal.maxEnergy
+                m.addHealth(Infinity)
+                m.energy = m.maxEnergy
                 break
             case "y":
                 tech.giveTech()
@@ -1479,7 +1479,7 @@ window.addEventListener("keydown", function (event) {
                 powerUps.research.changeRerolls(1000000)
                 break
             case "r":
-               playerLocal.resetHistory();
+                m.resetHistory();
                 Matter.Body.setPosition(player, simulation.mouseInGame);
                 Matter.Body.setVelocity(player, {
                     x: 0,
@@ -1817,9 +1817,9 @@ const sound = {
 //         preloadLink.as = "image";
 //         document.head.appendChild(preloadLink);
 //     }
-//     for (let i = 1, len =playerLocal.fieldUpgrades.length; i < len; i++) {
+//     for (let i = 1, len = m.fieldUpgrades.length; i < len; i++) {
 //         const preloadLink = document.createElement("link");
-//         preloadLink.href = "img/field/" +playerLocal.fieldUpgrades[i].name + ".webp";
+//         preloadLink.href = "img/field/" + m.fieldUpgrades[i].name + ".webp";
 //         preloadLink.rel = "preload";
 //         preloadLink.as = "image";
 //         document.head.appendChild(preloadLink);
@@ -1841,7 +1841,7 @@ if (!localSettings.isHideImages) {
     addEventListener("load", () => {
         let urls = new Array()
         for (let i = 0, len = b.guns.length; i < len; i++) urls.push("img/gun/" + b.guns[i].name + ".webp")
-        for (let i = 1, len =playerLocal.fieldUpgrades.length; i < len; i++) urls.push("img/field/" +playerLocal.fieldUpgrades[i].name + ".webp")
+        for (let i = 1, len = m.fieldUpgrades.length; i < len; i++) urls.push("img/field/" + m.fieldUpgrades[i].name + ".webp")
         for (let i = 0, len = tech.tech.length; i < len; i++) {
             if (!tech.tech[i].isJunk && !tech.tech[i].isLore) urls.push("img/" + tech.tech[i].name + ".webp")
         }
@@ -1871,7 +1871,7 @@ function cycle() {
         simulation.then = now - (elapsed % simulation.fpsInterval); // Get ready for next frame by setting then=now.   Also, adjust for fpsInterval not being multiple of 16.67
 
         simulation.cycle++; //tracks game cycles
-       playerLocal.cycle++; //tracks player cycles  //used to alow time to stop for everything, but the player
+        m.cycle++; //tracks player cycles  //used to alow time to stop for everything, but the player
         if (simulation.clearNow) {
             simulation.clearNow = false;
             simulation.clearMap();
@@ -1889,7 +1889,7 @@ function cycle() {
 //         simulation.then = now - (elapsed % simulation.fpsInterval); // Get ready for next frame by setting then=now.   Also, adjust for fpsInterval not being multiple of 16.67
 
 //         simulation.cycle++; //tracks game cycles
-//        playerLocal.cycle++; //tracks player cycles  //used to alow time to stop for everything, but the player
+//         m.cycle++; //tracks player cycles  //used to alow time to stop for everything, but the player
 //         if (simulation.clearNow) {
 //             simulation.clearNow = false;
 //             simulation.clearMap();
@@ -1907,7 +1907,7 @@ function cycle() {
 //         console.log(timestamp - timeStart)
 //         timeStart = timestamp
 //         simulation.cycle++; //tracks game cycles
-//        playerLocal.cycle++; //tracks player cycles  //used to alow time to stop for everything, but the player
+//         m.cycle++; //tracks player cycles  //used to alow time to stop for everything, but the player
 //         if (simulation.clearNow) {
 //             simulation.clearNow = false;
 //             simulation.clearMap();

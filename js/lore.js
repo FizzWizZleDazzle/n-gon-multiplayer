@@ -1023,7 +1023,7 @@ const lore = {
             () => {
                 lore.talkingColor = "#dff"
                 setTimeout(() => {
-                  playerLocal.death();
+                    m.death();
                 }, 6000);
             },
         ],
@@ -1063,7 +1063,7 @@ const lore = {
                 if (mobs.mobDeaths < level.levelsCleared) {
                     lore.miriam.text(`It has learned HOW TO LOVE!`)
                 } else {
-                  playerLocal.death();
+                    m.death();
                 }
             },
             () => {
