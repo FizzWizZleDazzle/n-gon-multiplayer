@@ -149,12 +149,12 @@ window.addEventListener('load', () => {
             }
 
             if (property === "difficulty") {
-                simulation.difficultyMode = Number(set[property])
+                players[localPlayerNum].simulation.difficultyMode = Number(set[property])
                 lore.setTechGoal()
                 document.getElementById("difficulty-select-experiment").value = Number(set[property])
             }
             if (property === "molMode") {
-                simulation.molecularMode = Number(set[property])
+                players[localPlayerNum].simulation.molecularMode = Number(set[property])
                 const i = 4 //update experiment text
                players[localPlayerNum].m.fieldUpgrades[i].description =players[localPlayerNum].m.fieldUpgrades[i].setDescription()
                 document.getElementById(`field-${i}`).innerHTML = `<div class="card-text">
@@ -215,7 +215,7 @@ function setupCanvas() {
     ctx.font = "25px Arial";
     ctx.lineJoin = "round";
     ctx.lineCap = "round";
-    simulation.setZoom();
+    players[localPlayerNum].simulation.setZoom();
 }
 setupCanvas();
 window.onresize = () => {
@@ -281,7 +281,7 @@ const build = {
                 // ctx.putImageData(imgData, 0, 1); //pixels fall because of the 1 in third parameter
                 ctx.putImageData(imgData, 0, 0);
             }
-            if (simulation.paused &&players[localPlayerNum].m.alive) requestAnimationFrame(loop);
+            if (players[localPlayerNum].simulation.paused &&players[localPlayerNum].m.alive) requestAnimationFrame(loop);
         }
         requestAnimationFrame(loop);
     },
@@ -305,7 +305,7 @@ const build = {
         // console.log(localSettings.isHideImages, from)
     },
     hideHUD() {
-        if (simulation.isTraining) {
+        if (players[localPlayerNum].simulation.isTraining) {
             localSettings.isHideHUD = false
         } else {
             localSettings.isHideHUD = !localSettings.isHideHUD
@@ -313,9 +313,9 @@ const build = {
         if (localSettings.isAllowed) localStorage.setItem("localSettings", JSON.stringify(localSettings)); //update local storage
         document.getElementById("hide-hud").checked = localSettings.isHideHUD
         document.getElementById("hide-hud").classList.toggle("ticked")
-        simulation.removeEphemera("dmgDefBars")
+        players[localPlayerNum].simulation.removeEphemera("dmgDefBars")
         if (!localSettings.isHideHUD) {
-            simulation.ephemera.push({
+            players[localPlayerNum].simulation.ephemera.push({
                 name: "dmgDefBars", count: 0, do() {
                     if (!(m.cycle % 15)) { //4 times a second
                         const defense =players[localPlayerNum].m.defense()             //update defense bar
@@ -350,7 +350,7 @@ const build = {
 
         //show in game console
         // document.getElementById("text-log").style.display = "inline"
-        simulation.lastLogTime =players[localPlayerNum].m.cycle //hide in game console
+        players[localPlayerNum].simulation.lastLogTime =players[localPlayerNum].m.cycle //hide in game console
 
     },
     generatePauseLeft() {
@@ -391,7 +391,7 @@ const build = {
 <br>
 
 <br><strong class='color-d'>damage</strong>: ${((tech.damageFromTech())).toPrecision(4)} &nbsp; &nbsp; difficulty: ${((m.dmgScale)).toPrecision(4)}
-<br><strong class='color-defense'>defense</strong>: ${(1 -players[localPlayerNum].m.defense()).toPrecision(5)} &nbsp; &nbsp; difficulty: ${(1 / simulation.dmgScale).toPrecision(4)}
+<br><strong class='color-defense'>defense</strong>: ${(1 -players[localPlayerNum].m.defense()).toPrecision(5)} &nbsp; &nbsp; difficulty: ${(1 / players[localPlayerNum].simulation.dmgScale).toPrecision(4)}
 <br><strong><em>fire rate</em></strong>: ${((1 - b.fireCDscale) * 100).toFixed(b.fireCDscale < 0.1 ? 2 : 0)}%
 ${tech.duplicationChance() ? `<br><strong class='color-dup'>duplication</strong>: ${(tech.duplicationChance() * 100).toFixed(0)}%` : ""}
 ${m.coupling ? `<br><span style = 'font-size:90%;'>` +players[localPlayerNum].m.couplingDescription(m.coupling) + `</span> from ${(m.coupling).toFixed(0)} ${powerUps.orb.coupling(1)}` : ""}
@@ -402,7 +402,7 @@ ${botText}
 <br><strong class='color-f'>energy</strong>: (${(m.energy * 100).toFixed(0)} / ${(m.maxEnergy * 100).toFixed(0)}) + (${(m.fieldRegen * 6000).toFixed(0)}/s)
 <span style="float: right;">position: (${player.position.x.toFixed(1)}, ${player.position.y.toFixed(1)})</span> 
 <br><strong class='color-g'>gun</strong>: ${b.activeGun === null || b.activeGun === undefined ? "undefined" : b.guns[b.activeGun].name} &nbsp; <strong class='color-g'>ammo</strong>: ${b.activeGun === null || b.activeGun === undefined ? "0" : b.guns[b.activeGun].ammo}
-<span style="float: right;">mouse: (${simulation.mouseInGame.x.toFixed(1)}, ${simulation.mouseInGame.y.toFixed(1)})</span> 
+<span style="float: right;">mouse: (${players[localPlayerNum].simulation.mouseInGame.x.toFixed(1)}, ${players[localPlayerNum].simulation.mouseInGame.y.toFixed(1)})</span> 
 <br><strong class='color-m'>tech</strong>: ${tech.totalCount}  &nbsp; <strong class='color-r'>research</strong>: ${powerUps.research.count}
 <span style="float: right;">velocity: (${player.velocity.x.toFixed(3)}, ${player.velocity.y.toFixed(3)})</span> 
 ${junkCount ? `<br><strong class='color-junk'>JUNK</strong>: ${(junkCount / totalCount * 100).toFixed(1)}%  ` : ""}
@@ -410,10 +410,10 @@ ${junkCount ? `<br><strong class='color-junk'>JUNK</strong>: ${(junkCount / tota
 <br>level: ${level.levelsCleared} ${level.levels[level.onLevel]} (${level.difficultyText()})
 <br>seed: ${Math.initialSeed} &nbsp; ${m.cycle} cycles
 <br>mobs: ${mob.length} &nbsp; blocks: ${body.length} &nbsp; bullets: ${bullet.length} &nbsp; power ups: ${powerUp.length} 
-${simulation.isCheating ? "<br><br><em>lore disabled</em>" : ""}
+${players[localPlayerNum].simulation.isCheating ? "<br><br><em>lore disabled</em>" : ""}
 </span></div>`;
         // deaths: ${mobs.mobDeaths} &nbsp;
-        if (tech.isPauseSwitchField && !simulation.isChoosing) {
+        if (tech.isPauseSwitchField && !players[localPlayerNum].simulation.isChoosing) {
             const style = localSettings.isHideImages ? `style="height:auto;"` : `style="background-image: url('img/field/${m.fieldUpgrades[m.fieldMode].name}${m.fieldMode === 0 ?players[localPlayerNum].m.fieldUpgrades[0].imageNumber : ""}.webp');"`
             text += `<div class="pause-grid-module card-background" id ="pause-field" ${style} >
                            <div class="card-text" style = "animation: fieldColorCycle 1s linear infinite alternate;">
@@ -460,8 +460,8 @@ ${simulation.isCheating ? "<br><br><em>lore disabled</em>" : ""}
 <input type="search" id="sort-input" style="width: 8em;font-size: 0.6em;color:#000;" placeholder="sort by"/>
 <button onclick="build.sortTech('input')" class='sort-button' style="border-radius: 0em;border: 1.5px #000 solid;font-size: 0.6em;" value="damage">sort</button>
 </div>`;
-        // const style = (tech.isPauseEjectTech && !simulation.isChoosing) ? 'style="animation: techColorCycle 1s linear infinite alternate;"' : ''
-        const ejectClass = (tech.isPauseEjectTech && !simulation.isChoosing) ? 'pause-eject' : ''
+        // const style = (tech.isPauseEjectTech && !players[localPlayerNum].simulation.isChoosing) ? 'style="animation: techColorCycle 1s linear infinite alternate;"' : ''
+        const ejectClass = (tech.isPauseEjectTech && !players[localPlayerNum].simulation.isChoosing) ? 'pause-eject' : ''
         for (let i = 0, len = tech.tech.length; i < len; i++) {
             if (tech.tech[i].count > 0) {
                 // const techCountText = tech.tech[i].count > 1 ? `(${tech.tech[i].count}x)` : "";
@@ -679,7 +679,7 @@ ${simulation.isCheating ? "<br><br><em>lore disabled</em>" : ""}
                         b.activeGun = null;
                         b.inventoryGun = 0;
                     }
-                    simulation.makeGunHUD();
+                    players[localPlayerNum].simulation.makeGunHUD();
                     break
                 }
             }
@@ -695,8 +695,8 @@ ${simulation.isCheating ? "<br><br><em>lore disabled</em>" : ""}
                 document.getElementById("tech-150").focus();
             } else if (m.fieldMode === 4) {
                 const i = 4 //update experiment text
-                simulation.molecularMode++
-                if (simulation.molecularMode > i - 1) simulation.molecularMode = 0
+                players[localPlayerNum].simulation.molecularMode++
+                if (players[localPlayerNum].simulation.molecularMode > i - 1) players[localPlayerNum].simulation.molecularMode = 0
                players[localPlayerNum].m.fieldUpgrades[i].description =players[localPlayerNum].m.fieldUpgrades[i].setDescription()
                 // document.getElementById(`field-${i}`).innerHTML = `<div class="grid-title"><div class="circle-grid field"></div> &nbsp; ${build.nameLink(m.fieldUpgrades[i].name)}</div> ${m.fieldUpgrades[i].description}`
 
@@ -868,7 +868,7 @@ ${simulation.isCheating ? "<br><br><em>lore disabled</em>" : ""}
 
         document.getElementById("difficulty-select-experiment").value = document.getElementById("difficulty-select").value
         document.getElementById("difficulty-select-experiment").addEventListener("input", () => {
-            simulation.difficultyMode = Number(document.getElementById("difficulty-select-experiment").value)
+            players[localPlayerNum].simulation.difficultyMode = Number(document.getElementById("difficulty-select-experiment").value)
             lore.setTechGoal()
             localSettings.difficultyMode = Number(document.getElementById("difficulty-select-experiment").value)
             document.getElementById("difficulty-select").value = document.getElementById("difficulty-select-experiment").value
@@ -890,10 +890,10 @@ ${simulation.isCheating ? "<br><br><em>lore disabled</em>" : ""}
     reset() {
         build.isExperimentSelection = true;
         build.isExperimentRun = true;
-        simulation.startGame(true); //starts game, but pauses it
+        players[localPlayerNum].simulation.startGame(true); //starts game, but pauses it
         build.isExperimentSelection = true;
         build.isExperimentRun = true;
-        simulation.paused = true;
+        players[localPlayerNum].simulation.paused = true;
         b.inventory = []; //removes guns and ammo  
         for (let i = 0, len = b.guns.length; i < len; ++i) {
             b.guns[i].count = 0;
@@ -902,7 +902,7 @@ ${simulation.isCheating ? "<br><br><em>lore disabled</em>" : ""}
         }
         b.activeGun = null;
         b.inventoryGun = 0;
-        simulation.makeGunHUD();
+        players[localPlayerNum].simulation.makeGunHUD();
        players[localPlayerNum].m.resetSkin()
         tech.setupAllTech();
         build.populateGrid();
@@ -928,20 +928,20 @@ ${simulation.isCheating ? "<br><br><em>lore disabled</em>" : ""}
                 }
             }
         }
-        url += `&molMode=${encodeURIComponent(simulation.molecularMode)}`
+        url += `&molMode=${encodeURIComponent(players[localPlayerNum].simulation.molecularMode)}`
         // if (property === "molMode") {
-        //     simulation.molecularMode = Number(set[property])
+        //     players[localPlayerNum].simulation.molecularMode = Number(set[property])
         //    players[localPlayerNum].m.fieldUpgrades[i].description =players[localPlayerNum].m.fieldUpgrades[i].setDescription()
         //     document.getElementById(`field-${i}`).innerHTML = `<div class="grid-title"><div class="circle-grid field"></div> &nbsp; ${build.nameLink(m.fieldUpgrades[i].name)}</div> ${m.fieldUpgrades[i].description}`
         // }
 
         url += `&field=${encodeURIComponent(m.fieldUpgrades[m.fieldMode].name.trim())}`
-        url += `&difficulty=${simulation.difficultyMode}`
+        url += `&difficulty=${players[localPlayerNum].simulation.difficultyMode}`
         if (isCustom) {
             // url += `&level=${Math.abs(Number(document.getElementById("starting-level").value))}`
             // alert('n-gon build URL copied to clipboard.\nPaste into browser address bar.')
         } else {
-            simulation.makeTextLog("n-gon build URL copied to clipboard.<br>Paste into browser address bar.")
+            players[localPlayerNum].simulation.makeTextLog("n-gon build URL copied to clipboard.<br>Paste into browser address bar.")
         }
         console.log('n-gon build URL copied to clipboard.\nPaste into browser address bar.')
         console.log(url)
@@ -970,18 +970,18 @@ ${simulation.isCheating ? "<br><br><em>lore disabled</em>" : ""}
         if (b.inventory.length > 0) {
             b.activeGun = b.inventory[0] //set first gun to active gun
             b.inventoryGun = 0;
-            simulation.makeGunHUD();
+            players[localPlayerNum].simulation.makeGunHUD();
         }
         for (let i = 0; i < bullet.length; ++i) Matter.Composite.remove(engine.world, bullet[i]);
         bullet = []; //remove any bullets that might have spawned from tech
         build.hasExperimentalMode = false
-        if (!simulation.isCheating) {
+        if (!players[localPlayerNum].simulation.isCheating) {
             for (let i = 0, len = tech.tech.length; i < len; i++) {
-                if (tech.tech[i].count > 0 && !tech.tech[i].isLore) simulation.isCheating = true;
+                if (tech.tech[i].count > 0 && !tech.tech[i].isLore) players[localPlayerNum].simulation.isCheating = true;
             }
-            if (b.inventory.length !== 0 ||players[localPlayerNum].m.fieldMode !== 0) simulation.isCheating = true;
+            if (b.inventory.length !== 0 ||players[localPlayerNum].m.fieldMode !== 0) players[localPlayerNum].simulation.isCheating = true;
         }
-        if (simulation.isCheating) { //if you are cheating remove any lore you might have gotten
+        if (players[localPlayerNum].simulation.isCheating) { //if you are cheating remove any lore you might have gotten
             lore.techCount = 0;
             for (let i = 0, len = tech.tech.length; i < len; i++) {
                 if (tech.tech[i].isLore) {
@@ -989,7 +989,7 @@ ${simulation.isCheating ? "<br><br><em>lore disabled</em>" : ""}
                     tech.tech[i].count = 0; //remove lore power up chance
                 }
             }
-            simulation.updateTechHUD();
+            players[localPlayerNum].simulation.updateTechHUD();
         } else { //if you have no tech (not cheating) remove all power ups that might have spawned from tech
             for (let i = 0; i < powerUp.length; ++i) Matter.Composite.remove(engine.world, powerUp[i]);
             powerUp = [];
@@ -1000,7 +1000,7 @@ ${simulation.isCheating ? "<br><br><em>lore disabled</em>" : ""}
         document.body.style.cursor = "none";
         document.body.style.overflow = "hidden"
         document.getElementById("experiment-grid").style.display = "none"
-        simulation.paused = false;
+        players[localPlayerNum].simulation.paused = false;
         requestAnimationFrame(cycle);
     }
 }
@@ -1021,7 +1021,7 @@ document.getElementById("experiment-button").addEventListener("click", () => { /
     // let field = 0;
     // let inventory = [];
     // let techList = [];
-    // if (!simulation.firstRun) {
+    // if (!players[localPlayerNum].simulation.firstRun) {
     //     field =players[localPlayerNum].m.fieldMode
     //     inventory = [...b.inventory]
     //     for (let i = 0; i < tech.tech.length; i++) {
@@ -1242,38 +1242,38 @@ window.addEventListener("keydown", function (event) {
             input.field = true
             break
         case input.key.nextGun:
-            simulation.nextGun();
+            players[localPlayerNum].simulation.nextGun();
             break
         case input.key.previousGun:
-            simulation.previousGun();
+            players[localPlayerNum].simulation.previousGun();
             break
         case input.key.pause:
-            if (!simulation.isChoosing && input.isPauseKeyReady &&players[localPlayerNum].m.alive) {
+            if (!players[localPlayerNum].simulation.isChoosing && input.isPauseKeyReady &&players[localPlayerNum].m.alive) {
                 input.isPauseKeyReady = false
                 setTimeout(function () {
                     input.isPauseKeyReady = true
                 }, 300);
-                if (simulation.paused) {
+                if (players[localPlayerNum].simulation.paused) {
                     build.unPauseGrid()
-                    simulation.paused = false;
+                    players[localPlayerNum].simulation.paused = false;
                     // level.levelAnnounce();
                     document.body.style.cursor = "none";
                     requestAnimationFrame(cycle);
                 } else if (!tech.isNoDraftPause) {
-                    simulation.paused = true;
+                    players[localPlayerNum].simulation.paused = true;
                     build.pauseGrid()
                     document.body.style.cursor = "auto";
 
-                    if (tech.isPauseSwitchField || simulation.testing) {
+                    if (tech.isPauseSwitchField || players[localPlayerNum].simulation.testing) {
                         document.getElementById("pause-field").addEventListener("click", () => {
                             const energy =players[localPlayerNum].m.energy //save current energy
-                            if (m.fieldMode === 4 && simulation.molecularMode < 3) {
-                                simulation.molecularMode++
+                            if (m.fieldMode === 4 && players[localPlayerNum].simulation.molecularMode < 3) {
+                                players[localPlayerNum].simulation.molecularMode++
                                players[localPlayerNum].m.fieldUpgrades[4].description =players[localPlayerNum].m.fieldUpgrades[4].setDescription()
                             } else {
                                players[localPlayerNum].m.setField((m.fieldMode ===players[localPlayerNum].m.fieldUpgrades.length - 1) ? 1 :players[localPlayerNum].m.fieldMode + 1) //cycle to next field, skip field emitter
                                 if (m.fieldMode === 4) {
-                                    simulation.molecularMode = 0
+                                    players[localPlayerNum].simulation.molecularMode = 0
                                    players[localPlayerNum].m.fieldUpgrades[4].description =players[localPlayerNum].m.fieldUpgrades[4].setDescription()
                                 }
                             }
@@ -1290,22 +1290,22 @@ window.addEventListener("keydown", function (event) {
             }
             break
         case input.key.testing:
-            if (m.alive && localSettings.loreCount > 0 && !simulation.paused) {
-                if (simulation.difficultyMode > 4) {
-                    simulation.makeTextLog("<em>testing mode disabled for this difficulty</em>");
+            if (m.alive && localSettings.loreCount > 0 && !players[localPlayerNum].simulation.paused) {
+                if (players[localPlayerNum].simulation.difficultyMode > 4) {
+                    players[localPlayerNum].simulation.makeTextLog("<em>testing mode disabled for this difficulty</em>");
                     break
                 }
-                if (simulation.testing) {
-                    simulation.testing = false;
-                    simulation.loop = simulation.normalLoop
-                    if (simulation.isConstructionMode) document.getElementById("construct").style.display = 'none'
-                    simulation.makeTextLog("", 0);
+                if (players[localPlayerNum].simulation.testing) {
+                    players[localPlayerNum].simulation.testing = false;
+                    players[localPlayerNum].simulation.loop = players[localPlayerNum].simulation.normalLoop
+                    if (players[localPlayerNum].simulation.isConstructionMode) document.getElementById("construct").style.display = 'none'
+                    players[localPlayerNum].simulation.makeTextLog("", 0);
                 } else { //if (keys[191])
-                    simulation.testing = true;
-                    simulation.loop = simulation.testingLoop
-                    if (simulation.isConstructionMode) document.getElementById("construct").style.display = 'inline'
-                    if (simulation.testing) tech.setCheating();
-                    simulation.makeTextLog(
+                    players[localPlayerNum].simulation.testing = true;
+                    players[localPlayerNum].simulation.loop = players[localPlayerNum].simulation.testingLoop
+                    if (players[localPlayerNum].simulation.isConstructionMode) document.getElementById("construct").style.display = 'inline'
+                    if (players[localPlayerNum].simulation.testing) tech.setCheating();
+                    players[localPlayerNum].simulation.makeTextLog(
                         `<table class="pause-table">
                             <tr>
                                 <td class='key-input-pause'>T</td>
@@ -1364,89 +1364,89 @@ window.addEventListener("keydown", function (event) {
             }
             break
     }
-    if (b.inventory.length > 1 && !simulation.testing && !tech.isGunCycle) {
+    if (b.inventory.length > 1 && !players[localPlayerNum].simulation.testing && !tech.isGunCycle) {
         switch (event.code) {
             case "Digit1":
-                simulation.switchToGunInInventory(0);
+                players[localPlayerNum].simulation.switchToGunInInventory(0);
                 break
             case "Digit2":
-                simulation.switchToGunInInventory(1);
+                players[localPlayerNum].simulation.switchToGunInInventory(1);
                 break
             case "Digit3":
-                simulation.switchToGunInInventory(2);
+                players[localPlayerNum].simulation.switchToGunInInventory(2);
                 break
             case "Digit4":
-                simulation.switchToGunInInventory(3);
+                players[localPlayerNum].simulation.switchToGunInInventory(3);
                 break
             case "Digit5":
-                simulation.switchToGunInInventory(4);
+                players[localPlayerNum].simulation.switchToGunInInventory(4);
                 break
             case "Digit6":
-                simulation.switchToGunInInventory(5);
+                players[localPlayerNum].simulation.switchToGunInInventory(5);
                 break
             case "Digit7":
-                simulation.switchToGunInInventory(6);
+                players[localPlayerNum].simulation.switchToGunInInventory(6);
                 break
             case "Digit8":
-                simulation.switchToGunInInventory(7);
+                players[localPlayerNum].simulation.switchToGunInInventory(7);
                 break
             case "Digit9":
-                simulation.switchToGunInInventory(8);
+                players[localPlayerNum].simulation.switchToGunInInventory(8);
                 break
             case "Digit0":
-                simulation.switchToGunInInventory(9);
+                players[localPlayerNum].simulation.switchToGunInInventory(9);
                 break
             case "Minus":
-                simulation.switchToGunInInventory(10);
+                players[localPlayerNum].simulation.switchToGunInInventory(10);
                 break
             case "Equal":
-                simulation.switchToGunInInventory(11);
+                players[localPlayerNum].simulation.switchToGunInInventory(11);
                 break
         }
     }
 
-    if (simulation.testing) {
+    if (players[localPlayerNum].simulation.testing) {
         if (event.key === "X")players[localPlayerNum].m.death(); //only uppercase
         switch (event.key.toLowerCase()) {
             case "o":
-                // simulation.isAutoZoom = false;
-                // simulation.zoomScale /= 0.9;
-                // simulation.setZoom();
-                simulation.zoomTransition(simulation.zoomScale / 0.9)
+                // players[localPlayerNum].simulation.isAutoZoom = false;
+                // players[localPlayerNum].simulation.zoomScale /= 0.9;
+                // players[localPlayerNum].simulation.setZoom();
+                players[localPlayerNum].simulation.zoomTransition(players[localPlayerNum].simulation.zoomScale / 0.9)
                 break;
             case "i":
-                // simulation.isAutoZoom = false;
-                // simulation.zoomScale *= 0.9;
-                // simulation.setZoom();
-                simulation.zoomTransition(simulation.zoomScale * 0.9)
+                // players[localPlayerNum].simulation.isAutoZoom = false;
+                // players[localPlayerNum].simulation.zoomScale *= 0.9;
+                // players[localPlayerNum].simulation.setZoom();
+                players[localPlayerNum].simulation.zoomTransition(players[localPlayerNum].simulation.zoomScale * 0.9)
                 break
             case "`":
-                powerUps.directSpawn(simulation.mouseInGame.x, simulation.mouseInGame.y, "research");
+                powerUps.directSpawn(players[localPlayerNum].simulation.mouseInGame.x, players[localPlayerNum].simulation.mouseInGame.y, "research");
                 break
             case "1":
-                powerUps.directSpawn(simulation.mouseInGame.x, simulation.mouseInGame.y, "heal");
+                powerUps.directSpawn(players[localPlayerNum].simulation.mouseInGame.x, players[localPlayerNum].simulation.mouseInGame.y, "heal");
                 break
             case "2":
-                powerUps.directSpawn(simulation.mouseInGame.x, simulation.mouseInGame.y, "ammo");
+                powerUps.directSpawn(players[localPlayerNum].simulation.mouseInGame.x, players[localPlayerNum].simulation.mouseInGame.y, "ammo");
                 break
             case "3":
-                powerUps.directSpawn(simulation.mouseInGame.x, simulation.mouseInGame.y, "gun");
+                powerUps.directSpawn(players[localPlayerNum].simulation.mouseInGame.x, players[localPlayerNum].simulation.mouseInGame.y, "gun");
                 break
             case "4":
-                powerUps.directSpawn(simulation.mouseInGame.x, simulation.mouseInGame.y, "field");
+                powerUps.directSpawn(players[localPlayerNum].simulation.mouseInGame.x, players[localPlayerNum].simulation.mouseInGame.y, "field");
                 break
             case "5":
-                powerUps.directSpawn(simulation.mouseInGame.x, simulation.mouseInGame.y, "tech");
+                powerUps.directSpawn(players[localPlayerNum].simulation.mouseInGame.x, players[localPlayerNum].simulation.mouseInGame.y, "tech");
                 break
             case "6":
-                spawn.bodyRect(simulation.mouseInGame.x, simulation.mouseInGame.y, 50, 50);
+                spawn.bodyRect(players[localPlayerNum].simulation.mouseInGame.x, players[localPlayerNum].simulation.mouseInGame.y, 50, 50);
                 break
             case "7":
                 const pick = spawn.fullPickList[Math.floor(Math.random() * spawn.fullPickList.length)];
-                spawn[pick](simulation.mouseInGame.x, simulation.mouseInGame.y);
+                spawn[pick](players[localPlayerNum].simulation.mouseInGame.x, players[localPlayerNum].simulation.mouseInGame.y);
                 break
             case "8":
-                spawn.randomLevelBoss(simulation.mouseInGame.x, simulation.mouseInGame.y);
+                spawn.randomLevelBoss(players[localPlayerNum].simulation.mouseInGame.x, players[localPlayerNum].simulation.mouseInGame.y);
                 break
             case "f":
                 const mode = (m.fieldMode ===players[localPlayerNum].m.fieldUpgrades.length - 1) ? 0 :players[localPlayerNum].m.fieldMode + 1
@@ -1480,7 +1480,7 @@ window.addEventListener("keydown", function (event) {
                 break
             case "r":
                players[localPlayerNum].m.resetHistory();
-                Matter.Body.setPosition(player, simulation.mouseInGame);
+                Matter.Body.setPosition(player, players[localPlayerNum].simulation.mouseInGame);
                 Matter.Body.setVelocity(player, {
                     x: 0,
                     y: 0
@@ -1521,8 +1521,8 @@ window.addEventListener("keydown", function (event) {
 });
 //mouse move input
 document.body.addEventListener("mousemove", (e) => {
-    simulation.mouse.x = e.clientX;
-    simulation.mouse.y = e.clientY;
+    players[localPlayerNum].simulation.mouse.x = e.clientX;
+    players[localPlayerNum].simulation.mouse.y = e.clientY;
 });
 
 document.body.addEventListener("mouseup", (e) => {
@@ -1571,11 +1571,11 @@ document.body.addEventListener("mouseleave", (e) => { //prevents mouse getting s
 });
 
 document.body.addEventListener("wheel", (e) => {
-    if (!simulation.paused) {
+    if (!players[localPlayerNum].simulation.paused) {
         if (e.deltaY > 0) {
-            simulation.nextGun();
+            players[localPlayerNum].simulation.nextGun();
         } else {
-            simulation.previousGun();
+            players[localPlayerNum].simulation.previousGun();
         }
     }
 }, {
@@ -1629,20 +1629,20 @@ if (localSettings.isAllowed && !localSettings.isEmpty) {
         localStorage.setItem("localSettings", JSON.stringify(localSettings)); //update local storage
     }
 
-    simulation.isCommunityMaps = localSettings.isCommunityMaps
+    players[localPlayerNum].simulation.isCommunityMaps = localSettings.isCommunityMaps
     document.getElementById("community-maps").checked = localSettings.isCommunityMaps
 
     if (localSettings.difficultyMode === undefined) localSettings.difficultyMode = "2"
-    simulation.difficultyMode = localSettings.difficultyMode
+    players[localPlayerNum].simulation.difficultyMode = localSettings.difficultyMode
     lore.setTechGoal()
     document.getElementById("difficulty-select").value = localSettings.difficultyMode
 
     if (localSettings.fpsCapDefault === undefined) localSettings.fpsCapDefault = 'max'
     if (localSettings.personalSeeds === undefined) localSettings.personalSeeds = [];
     if (localSettings.fpsCapDefault === 'max') {
-        simulation.fpsCapDefault = 999999999;
+        players[localPlayerNum].simulation.fpsCapDefault = 999999999;
     } else {
-        simulation.fpsCapDefault = Number(localSettings.fpsCapDefault)
+        players[localPlayerNum].simulation.fpsCapDefault = Number(localSettings.fpsCapDefault)
     }
     document.getElementById("fps-select").value = localSettings.fpsCapDefault
 
@@ -1688,7 +1688,7 @@ if (localSettings.isAllowed && !localSettings.isEmpty) {
     input.setDefault()
     if (localSettings.isAllowed) localStorage.setItem("localSettings", JSON.stringify(localSettings)); //update local storage
     document.getElementById("community-maps").checked = localSettings.isCommunityMaps
-    simulation.isCommunityMaps = localSettings.isCommunityMaps
+    players[localPlayerNum].simulation.isCommunityMaps = localSettings.isCommunityMaps
     document.getElementById("hide-images").checked = localSettings.isHideImages
     document.getElementById("difficulty-select").value = localSettings.difficultyMode
     document.getElementById("fps-select").value = localSettings.fpsCapDefault
@@ -1705,9 +1705,9 @@ input.controlTextUpdate()
 document.getElementById("fps-select").addEventListener("input", () => {
     let value = document.getElementById("fps-select").value
     if (value === 'max') {
-        simulation.fpsCapDefault = 999999999;
+        players[localPlayerNum].simulation.fpsCapDefault = 999999999;
     } else {
-        simulation.fpsCapDefault = Number(value)
+        players[localPlayerNum].simulation.fpsCapDefault = Number(value)
     }
     localSettings.fpsCapDefault = value
     if (localSettings.isAllowed) localStorage.setItem("localSettings", JSON.stringify(localSettings)); //update local storage
@@ -1719,16 +1719,16 @@ document.getElementById("banned").addEventListener("input", () => {
 });
 
 document.getElementById("community-maps").addEventListener("input", () => {
-    simulation.isCommunityMaps = document.getElementById("community-maps").checked
-    localSettings.isCommunityMaps = simulation.isCommunityMaps
+    players[localPlayerNum].simulation.isCommunityMaps = document.getElementById("community-maps").checked
+    localSettings.isCommunityMaps = players[localPlayerNum].simulation.isCommunityMaps
     if (localSettings.isAllowed) localStorage.setItem("localSettings", JSON.stringify(localSettings)); //update local storage
 });
 
 // difficulty-select-experiment event listener is set in build.makeGrid
 document.getElementById("difficulty-select").addEventListener("input", () => {
-    simulation.difficultyMode = Number(document.getElementById("difficulty-select").value)
+    players[localPlayerNum].simulation.difficultyMode = Number(document.getElementById("difficulty-select").value)
     lore.setTechGoal()
-    localSettings.difficultyMode = simulation.difficultyMode
+    localSettings.difficultyMode = players[localPlayerNum].simulation.difficultyMode
     localSettings.levelsClearedLastGame = 0 //after changing difficulty, reset run history
     localSettings.entanglement = undefined //after changing difficulty, reset stored tech
     if (localSettings.isAllowed) localStorage.setItem("localSettings", JSON.stringify(localSettings)); //update local storage
@@ -1861,59 +1861,59 @@ if (!localSettings.isHideImages) {
 //**********************************************************************
 // main loop 
 //**********************************************************************
-simulation.loop = simulation.normalLoop;
+players[localPlayerNum].simulation.loop = players[localPlayerNum].simulation.normalLoop;
 
 function cycle() {
-    if (!simulation.paused) requestAnimationFrame(cycle);
+    if (!players[localPlayerNum].simulation.paused) requestAnimationFrame(cycle);
     const now = Date.now();
-    const elapsed = now - simulation.then; // calc elapsed time since last loop
-    if (elapsed > simulation.fpsInterval) { // if enough time has elapsed, draw the next frame
-        simulation.then = now - (elapsed % simulation.fpsInterval); // Get ready for next frame by setting then=now.   Also, adjust for fpsInterval not being multiple of 16.67
+    const elapsed = now - players[localPlayerNum].simulation.then; // calc elapsed time since last loop
+    if (elapsed > players[localPlayerNum].simulation.fpsInterval) { // if enough time has elapsed, draw the next frame
+        players[localPlayerNum].simulation.then = now - (elapsed % players[localPlayerNum].simulation.fpsInterval); // Get ready for next frame by setting then=now.   Also, adjust for fpsInterval not being multiple of 16.67
 
-        simulation.cycle++; //tracks game cycles
+        players[localPlayerNum].simulation.cycle++; //tracks game cycles
        players[localPlayerNum].m.cycle++; //tracks player cycles  //used to alow time to stop for everything, but the player
-        if (simulation.clearNow) {
-            simulation.clearNow = false;
-            simulation.clearMap();
+        if (players[localPlayerNum].simulation.clearNow) {
+            players[localPlayerNum].simulation.clearNow = false;
+            players[localPlayerNum].simulation.clearMap();
             level.start();
         }
-        simulation.loop();
+        players[localPlayerNum].simulation.loop();
     }
 }
 
 // function cycle() {
-//     if (!simulation.paused) requestAnimationFrame(cycle);
+//     if (!players[localPlayerNum].simulation.paused) requestAnimationFrame(cycle);
 //     const now = Date.now();
-//     const elapsed = now - simulation.then; // calc elapsed time since last loop
-//     if (elapsed > simulation.fpsInterval) { // if enough time has elapsed, draw the next frame
-//         simulation.then = now - (elapsed % simulation.fpsInterval); // Get ready for next frame by setting then=now.   Also, adjust for fpsInterval not being multiple of 16.67
+//     const elapsed = now - players[localPlayerNum].simulation.then; // calc elapsed time since last loop
+//     if (elapsed > players[localPlayerNum].simulation.fpsInterval) { // if enough time has elapsed, draw the next frame
+//         players[localPlayerNum].simulation.then = now - (elapsed % players[localPlayerNum].simulation.fpsInterval); // Get ready for next frame by setting then=now.   Also, adjust for fpsInterval not being multiple of 16.67
 
-//         simulation.cycle++; //tracks game cycles
+//         players[localPlayerNum].simulation.cycle++; //tracks game cycles
 //        players[localPlayerNum].m.cycle++; //tracks player cycles  //used to alow time to stop for everything, but the player
-//         if (simulation.clearNow) {
-//             simulation.clearNow = false;
-//             simulation.clearMap();
+//         if (players[localPlayerNum].simulation.clearNow) {
+//             players[localPlayerNum].simulation.clearNow = false;
+//             players[localPlayerNum].simulation.clearMap();
 //             level.start();
 //         }
-//         simulation.loop();
+//         players[localPlayerNum].simulation.loop();
 //     }
 // }
 
 // let timeStart = performance.now()
 // //0,  16.6666666666,   33.333333333333, 50.000000000
 // function cycle(timestamp) {
-//     if (!simulation.paused) requestAnimationFrame(cycle);
-//     if (timestamp - timeStart > 0) { //simulation.fpsInterval) { // if enough time has elapsed, draw the next frame
+//     if (!players[localPlayerNum].simulation.paused) requestAnimationFrame(cycle);
+//     if (timestamp - timeStart > 0) { //players[localPlayerNum].simulation.fpsInterval) { // if enough time has elapsed, draw the next frame
 //         console.log(timestamp - timeStart)
 //         timeStart = timestamp
-//         simulation.cycle++; //tracks game cycles
+//         players[localPlayerNum].simulation.cycle++; //tracks game cycles
 //        players[localPlayerNum].m.cycle++; //tracks player cycles  //used to alow time to stop for everything, but the player
-//         if (simulation.clearNow) {
-//             simulation.clearNow = false;
-//             simulation.clearMap();
+//         if (players[localPlayerNum].simulation.clearNow) {
+//             players[localPlayerNum].simulation.clearNow = false;
+//             players[localPlayerNum].simulation.clearMap();
 //             level.start();
 //         }
-//         simulation.loop();
+//         players[localPlayerNum].simulation.loop();
 //     }
 // }
 
@@ -1929,7 +1929,7 @@ function cycle() {
 //         document.body.style.cursor = "auto";
 //         document.getElementById("choose-grid").style.transitionDuration = "0s";
 //     }
-//     if (count < 5 && simulation.isChoosing) {
+//     if (count < 5 && players[localPlayerNum].simulation.isChoosing) {
 //         requestAnimationFrame(cycle);
 //     } else {
 //         tech.isBrainstormActive = false

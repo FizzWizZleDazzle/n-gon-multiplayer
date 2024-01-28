@@ -40,7 +40,7 @@ const playerObject = {
 }
 
 const localPlayer = new playerObject();
-let localPlayerNum;
+let localPlayerNum = 1;
 
 //players
 var players = []
