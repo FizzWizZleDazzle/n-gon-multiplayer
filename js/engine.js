@@ -11,6 +11,9 @@ const Engine = Matter.Engine,
     Bodies = Matter.Bodies,
     Vector = Matter.Vector;
 
+
+import players from "./multiplayer.js";
+
 // create an engine
 const engine = Engine.create();
 engine.world.gravity.scale = 0; //turn off gravity (it's added back in later)

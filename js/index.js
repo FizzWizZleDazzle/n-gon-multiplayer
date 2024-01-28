@@ -1,5 +1,8 @@
 "use strict";
 
+import players from "./multiplayer.js";
+import localPlayerNum from "./multiplayer.js";
+
 //convert text into numbers for seed
 Math.hash = s => {
     for (var i = 0, h = 9; i < s.length;) h = Math.imul(h ^ s.charCodeAt(i++), 9 ** 9);
