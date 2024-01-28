@@ -16,7 +16,9 @@ wss.on('connection', function connection(ws) {
         ws.send(message)
     }
 
-    SendMessage("GetPlayerNumber");
+    SendMessage("GetPlayerAmount");
+
+
 
     // Event listener for when the server receives a message from the client
     ws.on('message', OnMessage(message));
@@ -41,23 +43,23 @@ const localPlayer = new playerObject();
 let localPlayerNum;
 
 //players
-var players = [
-    new playerObject(),
-    new playerObject(),
-    new playerObject(),
-    new playerObject(),    
-]
-
-
+var players = []
 
 function OnMessage(message) {
 
-    const [player_index, command] = message.split(":");
+    let [player_index, command] = message.split(":");
 
+    if (player_index = "A"){
+        for (let i = 0; i < command; i++){
+            players[i] = new playerObject();
+        }
+    }
+    if (player_index = "AP") {players[players.length] = new playerObject();}
+    if (player_index = "SB" && player_index < 1) {players.splice(command,1)}
     if (player_index = "N"){
-        localPlayerNum = message.substring(3);
-        players.splice(index,1);
-        players.splice(index,0,localPlayer)
+        localPlayerNum = command
+        players.splice(command,1);
+        players.splice(command,0,localPlayer)
     }
     else {
         switch (command){
