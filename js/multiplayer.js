@@ -41,12 +41,13 @@ const localPlayer = new playerObject();
 let localPlayerNum;
 
 //players
-const players = [
+var players = [
     new playerObject(),
     new playerObject(),
     new playerObject(),
     new playerObject(),    
 ]
+
 
 
 function OnMessage(message) {
@@ -55,6 +56,8 @@ function OnMessage(message) {
 
     if (player_index = "N"){
         localPlayerNum = message.substring(3);
+        players.splice(index,1);
+        players.splice(index,0,localPlayer)
     }
     else {
         switch (command){
