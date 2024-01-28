@@ -19,33 +19,33 @@ engine.world.gravity.scale = 0; //turn off gravity (it's added back in later)
 // engine.enableSleeping = true
 
 // matter events
-function playerOnGroundCheck(event) {
+function playerOnGroundCheck(event, object) {
     //runs on collisions events
     function enter() {
-        m.numTouching++;
+      object.numTouching++;
         if (!m.onGround) {
-            m.onGround = true;
+          object.onGround = true;
             if (m.crouch) {
                 if (m.checkHeadClear()) {
-                    m.undoCrouch();
+                  object.undoCrouch();
                 } else {
-                    m.yOffGoal = m.yOffWhen.crouch;
+                  object.yOffGoal = m.yOffWhen.crouch;
                 }
             } else {
                 //sets a hard land where player stays in a crouch for a bit and can't jump
                 //crouch is forced in groundControl below
                 const momentum = player.velocity.y * player.mass //player mass is 5 so this triggers at 26 down velocity, unless the player is holding something
                 if (momentum > tech.hardLanding) {
-                    m.doCrouch();
-                    m.yOff = m.yOffWhen.jump;
-                    m.hardLandCD = m.cycle + Math.min(momentum / 6.5 - 6, 40)
+                  object.doCrouch();
+                  object.yOff = m.yOffWhen.jump;
+                  object.hardLandCD = m.cycle + Math.min(momentum / 6.5 - 6, 40)
                     //falling damage
                     if (tech.isFallingDamage && m.immuneCycle < m.cycle && momentum > 150) {
-                        m.damage(Math.min(Math.sqrt(momentum - 133) * 0.01, 0.25));
+                      object.damage(Math.min(Math.sqrt(momentum - 133) * 0.01, 0.25));
                         if (m.immuneCycle < m.cycle + m.collisionImmuneCycles) m.immuneCycle = m.cycle + m.collisionImmuneCycles; //player is immune to damage for 30 cycles
                     }
                 } else {
-                    m.yOffGoal = m.yOffWhen.stand;
+                  object.yOffGoal = m.yOffWhen.stand;
                 }
             }
         }
@@ -55,37 +55,37 @@ function playerOnGroundCheck(event) {
     for (let i = 0, j = pairs.length; i != j; ++i) {
         let pair = pairs[i];
         if (pair.bodyA === jumpSensor) {
-            m.standingOn = pair.bodyB; //keeping track to correctly provide recoil on jump
+          object.standingOn = pair.bodyB; //keeping track to correctly provide recoil on jump
             if (m.standingOn.alive !== true) enter();
         } else if (pair.bodyB === jumpSensor) {
-            m.standingOn = pair.bodyA; //keeping track to correctly provide recoil on jump
+          object.standingOn = pair.bodyA; //keeping track to correctly provide recoil on jump
             if (m.standingOn.alive !== true) enter();
         }
     }
-    m.numTouching = 0;
+  object.numTouching = 0;
 }
 
-function playerOffGroundCheck(event) {
+function playerOffGroundCheck(event, object) {
     //runs on collisions events
     const pairs = event.pairs;
     for (let i = 0, j = pairs.length; i != j; ++i) {
         if (pairs[i].bodyA === jumpSensor || pairs[i].bodyB === jumpSensor) {
             if (m.onGround && m.numTouching === 0) {
-                m.onGround = false;
-                m.lastOnGroundCycle = m.cycle;
-                m.hardLandCD = 0 // disable hard landing
+              object.onGround = false;
+              object.lastOnGroundCycle = m.cycle;
+              object.hardLandCD = 0 // disable hard landing
                 if (m.checkHeadClear()) {
                     if (m.crouch) {
-                        m.undoCrouch();
+                      object.undoCrouch();
                     }
-                    m.yOffGoal = m.yOffWhen.jump;
+                  object.yOffGoal = m.yOffWhen.jump;
                 }
             }
         }
     }
 }
 
-function collisionChecks(event) {
+function collisionChecks(event, object) {
     const pairs = event.pairs;
     for (let i = 0, j = pairs.length; i != j; i++) {
         //mob + (player,bullet,body) collisions
@@ -102,7 +102,7 @@ function collisionChecks(event) {
                 function collideMob(obj) {
                     //player + mob collision
                     if (
-                        m.immuneCycle < m.cycle &&
+                      object.immuneCycle < m.cycle &&
                         (obj === playerBody || obj === playerHead) &&
                         !mob[k].isSlowed && !mob[k].isStunned
                     ) {
@@ -110,23 +110,23 @@ function collisionChecks(event) {
                         // if (m.isCloak) dmg *= 0.5
                         mob[k].foundPlayer();
                         if (tech.isRewindAvoidDeath && (m.energy + 0.05) > Math.min(0.95, m.maxEnergy) && dmg > 0.01) { //CPT reversal runs in m.damage, but it stops the rest of the collision code here too
-                            m.damage(dmg);
+                          object.damage(dmg);
                             return
                         }
                         if (tech.isFlipFlop) {
                             if (tech.isFlipFlopOn) {
                                 tech.isFlipFlopOn = false
                                 if (document.getElementById("tech-flip-flop")) document.getElementById("tech-flip-flop").innerHTML = ` = <strong>OFF</strong>`
-                                m.eyeFillColor = 'transparent'
-                                m.damage(dmg);
+                              object.eyeFillColor = 'transparent'
+                              object.damage(dmg);
                             } else {
                                 tech.isFlipFlopOn = true //immune to damage this hit, lose immunity for next hit
                                 if (document.getElementById("tech-flip-flop")) document.getElementById("tech-flip-flop").innerHTML = ` = <strong>ON</strong>`
-                                m.eyeFillColor = m.fieldMeterColor //'#0cf'
+                              object.eyeFillColor = m.fieldMeterColor //'#0cf'
                                 if (!tech.isFlipFlopHarm) m.damage(dmg);
                             }
                             if (tech.isFlipFlopHealth) {
-                                m.setMaxHealth();
+                              object.setMaxHealth();
                                 for (let i = 0; i < powerUp.length; i++) {
                                     if (powerUp[i].name === "heal") {
                                         const oldSize = powerUp[i].size
@@ -137,17 +137,17 @@ function collisionChecks(event) {
                                 }
                             }
                         } else {
-                            m.damage(dmg); //normal damage
+                          object.damage(dmg); //normal damage
                         }
 
                         if (tech.isCollisionRealitySwitch && m.alive) {
-                            m.switchWorlds()
+                          object.switchWorlds()
                             simulation.trails()
                             simulation.makeTextLog(`simulation.amplitude <span class='color-symbol'>=</span> ${Math.random()}`);
                         }
                         if (tech.isPiezo) m.energy += 20.48;
                         if (tech.isCouplingNoHit && m.coupling > 0) {
-                            m.couplingChange(-5)
+                          object.couplingChange(-5)
 
                             const unit = Vector.rotate({ x: 1, y: 0 }, 6.28 * Math.random())
                             let where = Vector.add(m.pos, Vector.mult(unit, 17))
@@ -230,7 +230,7 @@ function collisionChecks(event) {
                         });
 
                         if (tech.isAnnihilation && !mob[k].shield && !mob[k].isShielded && !mob[k].isBoss && mob[k].isDropPowerUp && m.energy > 0.34 * m.maxEnergy && mob[k].damageReduction > 0) {
-                            m.energy -= 0.33 * Math.max(m.maxEnergy, m.energy) //0.33 * m.energy
+                          object.energy -= 0.33 * Math.max(m.maxEnergy, m.energy) //0.33 * m.energy
                             if (m.immuneCycle === m.cycle + m.collisionImmuneCycles) m.immuneCycle = 0; //player doesn't go immune to collision damage
                             mob[k].death();
                             simulation.drawList.push({ //add dmg to draw queue

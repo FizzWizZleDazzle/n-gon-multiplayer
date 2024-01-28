@@ -479,7 +479,7 @@ const mobs = {
                     // ctx.lineDashOffset = 6*(simulation.cycle % 215);
                     if (this.distanceToPlayer() < this.laserRange) {
                         if (m.immuneCycle < m.cycle) {
-                          damage(0.0003 * simulation.dmgScale);
+                            m.damage(0.0003 * simulation.dmgScale);
                             if (m.energy > 0.1) m.energy -= 0.003
                         }
                         ctx.beginPath();
