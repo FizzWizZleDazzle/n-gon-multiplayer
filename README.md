@@ -4,3 +4,5 @@ N-Gon multiplayer v0.1
 
 Original:
 https://landgreen.github.io/sidescroller/
+
+average FizzWizZleDazzle using javascript `eval()`
