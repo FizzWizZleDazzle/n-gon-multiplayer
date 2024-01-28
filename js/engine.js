@@ -330,14 +330,20 @@ function collisionChecks(event, object) {
 
 //determine if player is on the ground
 Events.on(engine, "collisionStart", function (event) {
-    playerOnGroundCheck(event,localPlayer.m);
-    // playerHeadCheck(event);
-    collisionChecks(event,localPlayer.m);
+    for (var i in players){
+        playerOnGroundCheck(event,players[i].m);
+        // playerHeadCheck(event);
+        collisionChecks(event,players[i].m);
+    }
 });
 Events.on(engine, "collisionActive", function (event) {
-    playerOnGroundCheck(event,localPlayer.m);
-    // playerHeadCheck(event);
+    for (var i in players){
+        playerOnGroundCheck(event,players[i].m);
+        // playerHeadCheck(event);
+    }
 });
 Events.on(engine, "collisionEnd", function (event) {
-    playerOffGroundCheck(event,localPlayer.m);
+    for (var i in players){
+        playerOffGroundCheck(event,players[i].m);
+    }
 });
