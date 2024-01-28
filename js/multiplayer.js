@@ -54,8 +54,11 @@ function OnMessage(message) {
             players[i] = new playerObject();
         }
     }
+    //Add or subtract players
     if (player_index = "AP") {players[players.length] = new playerObject();}
     if (player_index = "SB" && player_index < 1) {players.splice(command,1)}
+
+    
     if (player_index = "N"){
         localPlayerNum = command
         players.splice(command,1);
