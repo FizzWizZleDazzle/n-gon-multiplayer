@@ -1,12 +1,9 @@
-// Import the WebSocket module
-const WebSocket = require('ws');
-
 // Specify the IP address and port to listen on
-const ip = '127.0.0.1'; // Example IP address
+const ip = 'wss://127.0.0.1'; // Example IP address
 const port = 3000;
 
 // Create a WebSocket server instance, listening on the specified IP address and port
-const wss = new WebSocket.Server({ host: ip, port: port });
+const wss = new WebSocket(ip);
 
 // Event listener for when a client connects
 wss.on('connection', function connection(ws) {

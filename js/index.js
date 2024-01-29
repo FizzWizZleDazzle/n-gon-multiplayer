@@ -1,6 +1,6 @@
 "use strict";
 
-import Test from "./multiplayer";
+import { players, localPlayer, localPlayerNum} from "./multiplayer"
 
 //convert text into numbers for seed
 Math.hash = s => {
