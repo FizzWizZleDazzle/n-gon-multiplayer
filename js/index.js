@@ -8,7 +8,7 @@ Math.hash = s => {
     return h ^ h >>> 9
 }
 
-Test();
+players[1] = localPlayer;
 
 // const date1 = new Date()
 // console.log(date1.getUTCHours())
