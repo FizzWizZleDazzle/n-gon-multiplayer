@@ -7,6 +7,8 @@ Math.hash = s => {
     return h ^ h >>> 9
 }
 
+Test();
+
 // const date1 = new Date()
 // console.log(date1.getUTCHours())
 // document.getElementById("seed").placeholder = Math.initialSeed = String(date1.getUTCDate() * date1.getUTCFullYear()) // daily seed,  day + year
