@@ -12,7 +12,6 @@ const Engine = Matter.Engine,
     Vector = Matter.Vector;
 
 
-import players from "./multiplayer.js";
 
 // create an engine
 const engine = Engine.create();

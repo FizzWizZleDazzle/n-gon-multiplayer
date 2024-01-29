@@ -1,7 +1,5 @@
 "use strict";
 
-import {players, localPlayerNum} from "./multiplayer.js";
-
 
 //convert text into numbers for seed
 Math.hash = s => {
