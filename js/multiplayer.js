@@ -45,6 +45,11 @@ let localPlayerNum = 1;
 //players
 var players = []
 
+function Test(){
+    players[1] = localPlayer;
+}
+
+
 function OnMessage(message) {
 
     let [player_index, command] = message.split(":");
