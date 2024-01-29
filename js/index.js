@@ -1,7 +1,7 @@
 "use strict";
 
-import players from "./multiplayer.js";
-import localPlayerNum from "./multiplayer.js";
+import {players, localPlayerNum} from "./multiplayer.js";
+
 
 //convert text into numbers for seed
 Math.hash = s => {
@@ -15,12 +15,16 @@ Math.hash = s => {
 
 // document.getElementById("seed").placeholder = Math.initialSeed = Math.floor(Date.now() % 100000) //random every time:  just the time in milliseconds UTC
 
-document.getElementById("seed").placeholder = Math.initialSeed = String(Math.floor(Date.now() % 100000))
-Math.seed = Math.abs(Math.hash(Math.initialSeed)) //update randomizer seed in case the player changed it
-Math.seededRandom = function (min = 0, max = 1) { // in order to work 'Math.seed' must NOT be undefined
-    Math.seed = (Math.seed * 9301 + 49297) % 233280;
-    return min + Math.seed / 233280 * (max - min);
-}
+
+
+//do on server
+
+//Math.seed = Math.abs(Math.hash(Math.initialSeed)) //update randomizer seed in case the player changed it
+//Math.seededRandom = function (min = 0, max = 1) { // in order to work 'Math.seed' must NOT be undefined
+//    Math.seed = (Math.seed * 9301 + 49297) % 233280;
+//    return min + Math.seed / 233280 * (max - min);
+//}
+
 //Math.seed is set to document.getElementById("seed").value in level.populate level at the start of runs
 // console.log(Math.seed)
 
@@ -121,7 +125,7 @@ window.addEventListener('load', () => {
             if (property === "field") {
                 let found = false
                 let index
-                for (let i = 0; i <players[localPlayerNum].m.fieldUpgrades.length; i++) {
+                for (let i = 0; i < players[localPlayerNum].m.fieldUpgrades.length; i++) {
                     if (set[property] ===players[localPlayerNum].m.fieldUpgrades[i].name) {
                         index = i;
                         found = true;
@@ -1844,8 +1848,8 @@ if (!localSettings.isHideImages) {
     addEventListener("load", () => {
         let urls = new Array()
         for (let i = 0, len = b.guns.length; i < len; i++) urls.push("img/gun/" + b.guns[i].name + ".webp")
-        for (let i = 1, len =players[localPlayerNum].m.fieldUpgrades.length; i < len; i++) urls.push("img/field/" +players[localPlayerNum].m.fieldUpgrades[i].name + ".webp")
-        for (let i = 0, len = tech.tech.length; i < len; i++) {
+        for (let i = 1, len = players[localPlayerNum].m.fieldUpgrades.length; i < len; i++) urls.push("img/field/" +players[localPlayerNum].m.fieldUpgrades[i].name + ".webp")
+        for (let i = 0, len = players[localPlayerNum].tech.length; i < len; i++) {
             if (!tech.tech[i].isJunk && !tech.tech[i].isLore) urls.push("img/" + tech.tech[i].name + ".webp")
         }
         let images = new Array()

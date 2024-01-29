@@ -16,7 +16,7 @@ wss.on('connection', function connection(ws) {
         ws.send(message)
     }
 
-    SendMessage("GetPlayerAmount");
+    SendMessage("PlayerAmount");
 
 
 
@@ -53,13 +53,18 @@ function OnMessage(message) {
         for (let i = 0; i < command; i++){
             players[i] = new playerObject();
         }
+        SendMessage("PlayerNumber")
+        SendMessage("Seed")
     }
     //Add or subtract players
-    if (player_index = "AP") {players[players.length] = new playerObject();}
-    if (player_index = "SB" && player_index < 1) {players.splice(command,1)}
+    else if (player_index = "AP") {players[players.length] = new playerObject();}
+    else if (player_index = "SB" && player_index < 1) {players.splice(command,1)}
 
-    
-    if (player_index = "N"){
+    else if (player_index = "S"){
+        document.getElementById("seed").placeholder = command;
+    }
+
+    else if (player_index = "N"){
         localPlayerNum = command
         players.splice(command,1);
         players.splice(command,0,localPlayer)
