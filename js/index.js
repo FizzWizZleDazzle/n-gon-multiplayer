@@ -51,7 +51,7 @@ function playerObject() {
 }
 
 const localPlayer = new playerObject();
-let localPlayerNum = 1;
+let localPlayerNum = 0;
 
 //players
 var players = []
@@ -89,7 +89,7 @@ function OnMessage(message) {
 }
 
 
-players[1] = localPlayer;
+players[localPlayerNum] = localPlayer;
 
 //do on server
 
