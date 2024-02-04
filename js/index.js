@@ -20,34 +20,34 @@ const port = 3000;
 const wss = new WebSocket(ip);
 
 // Event listener for when a client connects
-wss.on('connection', function connection(ws) {
-    console.log('Client connected');
-    
-    function SendMessage(message) {
-        ws.send(message)
-    }
-
-    SendMessage("PlayerAmount");
-
-
-
-    // Event listener for when the server receives a message from the client
-    ws.on('message', OnMessage(message));
-
-  });
-
-console.log(`WebSocket server running on ws://${ip}:${port}`);
+//wss.on('connection', function connection(ws) {
+    //console.log('Client connected');
+    //
+    //function SendMessage(message) {
+    //    ws.send(message)
+  //  }
+//
+  //  SendMessage("PlayerAmount");
+//
+//
+//
+    //// Event listener for when the server receives a message from the client
+  //  ws.on('message', OnMessage(message));
+//
+  //});
+//
+//console.log(`WebSocket server running on ws://${ip}:${port}`);
 
 // player object
-const playerObject = {
-    m : new m(),
-    simulation : new simulation(),
-    tech : new tech(),
-    powerUps : new powerUps(),
-    mobs : new mobs(),
-    level : new level(),
-    b : new b(),
-    spawn : new spawn(),
+function playerObject() {
+    this.m = m;
+    this.simulation = simulation;
+    this.tech = tech;
+    this.powerUps = powerUps;
+    this.mobs = mobs;
+    this.level = level;
+    this.b = b;
+    this.spawn = spawn;
 }
 
 const localPlayer = new playerObject();
